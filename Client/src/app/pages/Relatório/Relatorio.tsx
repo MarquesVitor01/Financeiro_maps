@@ -32,10 +32,9 @@ export const Relatorio: React.FC = () => {
   const [totalBase, setTotalBase] = useState(0);
   const [totalRenovacao, setTotalRenovacao] = useState(0);
 
-  // Estados de paginação separados
   const [currentPageBase, setCurrentPageBase] = useState(1);
   const [currentPageRenovacao, setCurrentPageRenovacao] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 4;
 
   const db = getFirestore();
 
@@ -128,26 +127,32 @@ export const Relatorio: React.FC = () => {
   }, {});
 
   const getAllOperators = () => {
-    return Object.keys(vendasPorOperador).filter(
-      (operador) =>
-        vendasPorOperador[operador].base > 0 ||
-        vendasPorOperador[operador].renovacao > 0
-    );
+    return Object.keys(vendasPorOperador)
+      .filter(
+        (operador) =>
+          vendasPorOperador[operador].base > 0 ||
+          vendasPorOperador[operador].renovacao > 0
+      )
+      .sort((a, b) => {
+        const totalA = vendasPorOperador[a].base + vendasPorOperador[a].renovacao;
+        const totalB = vendasPorOperador[b].base + vendasPorOperador[b].renovacao;
+        return totalB - totalA; // Ordenar do maior para o menor
+      });
   };
-
+  
   const getTopThree = (tipo: "Base" | "Renovacao") => {
     const filtrados = Object.keys(vendasPorOperador).filter((operador) =>
       tipo === "Base"
         ? vendasPorOperador[operador].base > 0
         : vendasPorOperador[operador].renovacao > 0
     );
-
+  
     return filtrados
-      .sort((a, b) =>
-        tipo === "Base"
-          ? vendasPorOperador[b].base - vendasPorOperador[a].base
-          : vendasPorOperador[b].renovacao - vendasPorOperador[a].renovacao
-      )
+      .sort((a, b) => {
+        const totalA = vendasPorOperador[a].base + vendasPorOperador[a].renovacao;
+        const totalB = vendasPorOperador[b].base + vendasPorOperador[b].renovacao;
+        return totalB - totalA; // Ordenar do maior para o menor
+      })
       .slice(0, 3);
   };
 
@@ -158,6 +163,7 @@ export const Relatorio: React.FC = () => {
   // Cálculo da paginação para Base
   const indexOfLastBaseOperator = currentPageBase * itemsPerPage;
   const indexOfFirstBaseOperator = indexOfLastBaseOperator - itemsPerPage;
+
   const currentBaseOperators = allOperators
     .filter((operador) => vendasPorOperador[operador].base > 0)
     .slice(indexOfFirstBaseOperator, indexOfLastBaseOperator);
@@ -240,7 +246,7 @@ export const Relatorio: React.FC = () => {
               <FontAwesomeIcon icon={faLeftLong} />
             </button>
             <span>
-            {currentPageRenovacao} / {totalRenovacaoPages}
+              {currentPageRenovacao} / {totalRenovacaoPages}
 
             </span>
             <button
