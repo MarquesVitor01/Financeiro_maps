@@ -201,7 +201,7 @@ export const Relatorio: React.FC = () => {
                     alt={`${operador} Avatar`}
                     className="img-podio"
                   />
-                  <span className="operador-podio">{operador}</span>
+                  <span className="operador-podio">{operador.replace(/\./g, " ")}</span>
                   <span className="vendas-podio">
                     {vendasPorOperador[operador].renovacao}
                   </span>
@@ -228,7 +228,7 @@ export const Relatorio: React.FC = () => {
                     }}
                     className="foto-ranking"
                   />
-                  <span className="nome-operador">{operador}</span>
+                  <span className="nome-operador">{operador.replace(/\./g, " ")}</span>
                   <h2 className="vendas-operador">
                     {vendasPorOperador[operador].renovacao}
                   </h2>
@@ -274,7 +274,7 @@ export const Relatorio: React.FC = () => {
                     alt={`${operador} Avatar`}
                     className="img-podio"
                   />
-                  <span className="operador-podio">{operador}</span>
+                  <span className="operador-podio">{operador.replace(/\./g, " ")}</span>
                   <span className="vendas-podio">
                     {vendasPorOperador[operador].base}
                   </span>
@@ -301,7 +301,7 @@ export const Relatorio: React.FC = () => {
                     }}
                     className="foto-ranking"
                   />
-                  <span className="nome-operador">{operador}</span>
+                  <span className="nome-operador">{operador.replace(/\./g, " ")}</span>
                   <h2 className="vendas-operador">
                     {vendasPorOperador[operador].base}
                   </h2>

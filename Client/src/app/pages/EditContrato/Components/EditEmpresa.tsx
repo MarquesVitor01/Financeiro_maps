@@ -1,6 +1,6 @@
 import { faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface VendaData {
   razaoSocial: string;
@@ -27,7 +27,7 @@ interface VendaData {
 interface EditEmpresaFormProps {
   form: VendaData | null;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-  tipoDocumento: "CPF" | "CNPJ"; // Type restriction for tipoDocumento
+  tipoDocumento: "CPF" | "CNPJ";
   handleToggleDocumento: () => void;
   isRotated: boolean;
 }
@@ -72,6 +72,11 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
 }) => {
   const [formattedDocument, setFormattedDocument] = useState<string>(tipoDocumento === "CPF" ? form?.cpf || '' : form?.cnpj || '');
 
+  useEffect(() => {
+    // Atualiza o valor inicial do documento formatado sempre que tipoDocumento ou form mudarem
+    setFormattedDocument(tipoDocumento === "CPF" ? form?.cpf || '' : form?.cnpj || '');
+  }, [tipoDocumento, form]);
+
   const formatCNPJ = (value: string) => {
     return value.replace(/\D/g, '')
       .replace(/(\d{2})(\d)/, '$1.$2')
@@ -89,16 +94,11 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
 
   const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-
-    const maxLength = tipoDocumento === "CPF" ? 14 : 18; // CPF = 14 characters, CNPJ = 18 characters
-
+    const maxLength = tipoDocumento === "CPF" ? 14 : 18; 
     const trimmedValue = value.slice(0, maxLength);
-
     const formattedValue = tipoDocumento === "CPF" ? formatCPF(trimmedValue) : formatCNPJ(trimmedValue);
-
     setFormattedDocument(formattedValue);
 
-    // Update state accordingly
     handleInputChange({
       target: { name: tipoDocumento === "CPF" ? "cpf" : "cnpj", value: formattedValue }
     } as React.ChangeEvent<HTMLInputElement>);
@@ -226,6 +226,27 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
         label="2º E-mail"
         name="email2"
         value={form.email2}
+        onChange={handleInputChange}
+      />
+      <InputField
+        id="horarioFuncionamento"
+        label="Horário de funcionamento"
+        name="horarioFuncionamento"
+        value={form.horarioFuncionamento}
+        onChange={handleInputChange}
+      />
+      <InputField
+        id="responsavel"
+        label="Nome do Responsável"
+        name="responsavel"
+        value={form.responsavel}
+        onChange={handleInputChange}
+      />
+      <InputField
+        id="cargo"
+        label="Cargo do Responsável"
+        name="cargo"
+        value={form.cargo}
         onChange={handleInputChange}
       />
       <InputField

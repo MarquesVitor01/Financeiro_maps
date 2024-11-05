@@ -8,43 +8,45 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Components/Styles/add.css";
 import { useAuth } from "../../context/AuthContext";
+import { InfoAdicionais } from "./Components/InfoAdicionais";
 
 export const Add = () => {
   const userId = auth.currentUser?.uid;
   const { nome, cargo } = useAuth();
   const [form, setForm] = useState({
-    numeroContrato: '',
-    data: '',
-    dataVencimento: '',
+    numeroContrato: "",
+    data: "",
+    dataVencimento: "",
     operador: nome,
     createdBy: userId,
     setor: cargo,
-    equipe: 'G MARKETING DIGITAL',
-    razaoSocial: '',
-    cpf: '',
-    cnpj: '',
-    nomeFantasia: '',
-    enderecoComercial: '',
-    bairro: '',
-    cep: '',
-    estado: '',
-    cidade: '',
-    validade: '',
-    observacoes: '',
-    fixo: '',
-    celular: '',
-    whatsapp: '',
-    email1: '',
-    email2: '',
-    horarioFuncionamento: '',
-    responsavel: '',
-    cargo: '',
-    valorVenda: '',
-    contrato: '', 
-    parcelas: '',
-    formaPagamento: '',
-    qrcodeText: '',
-    linkGoogle: '',
+    equipe: "G MARKETING DIGITAL",
+    razaoSocial: "",
+    cpf: "",
+    cnpj: "",
+    nomeFantasia: "",
+    enderecoComercial: "",
+    bairro: "",
+    cep: "",
+    estado: "",
+    cidade: "",
+    validade: "",
+    observacoes: "",
+    fixo: "",
+    celular: "",
+    whatsapp: "",
+    email1: "",
+    email2: "",
+    horarioFuncionamento: "",
+    responsavel: "",
+    cargo: "",
+    valorVenda: "",
+    contrato: "",
+    parcelas: "1",
+    formaPagamento: "",
+    qrcodeText: "",
+    renovacaoAutomatica: "",
+    linkGoogle: "",
     opcao1: false,
     opcao2: false,
     opcao3: false,
@@ -54,18 +56,22 @@ export const Add = () => {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [tipoDocumento, setTipoDocumento] = useState('CPF');
+  const [tipoDocumento, setTipoDocumento] = useState("CPF");
   const [isRotated, setIsRotated] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     const { name, value } = e.target;
 
-    if ((name === 'cnpj' || name === 'cpf') && value.length >= 6) {
+    if ((name === "cnpj" || name === "cpf") && value.length >= 6) {
       setForm((prev) => ({
         ...prev,
         [name]: value,
-        numeroContrato: value.slice(0, 6),  
+        numeroContrato: value.slice(0, 6),
       }));
     } else {
       setForm((prev) => ({
@@ -76,7 +82,7 @@ export const Add = () => {
   };
 
   const handleToggleDocumento = () => {
-    setTipoDocumento((prev) => (prev === 'CPF' ? 'CNPJ' : 'CPF'));
+    setTipoDocumento((prev) => (prev === "CPF" ? "CNPJ" : "CPF"));
     setIsRotated((prev) => !prev);
   };
 
@@ -100,18 +106,17 @@ export const Add = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-  
+
     try {
       await addDoc(collection(db, "vendas"), form);
       toast.success("Cliente adicionado com sucesso!");
-  
-      // Espera 2 segundos antes de redirecionar
+
       setTimeout(() => {
         setRedirect(true);
       }, 2000);
     } catch (error) {
       console.error("Erro ao adicionar cliente: ", error);
-      toast.error("Ocorreu um erro ao adicionar o cliente."); // Mudei para toast.error
+      toast.error("Ocorreu um erro ao adicionar o cliente."); 
     } finally {
       setLoading(false);
     }
@@ -143,9 +148,12 @@ export const Add = () => {
               isRotated={isRotated}
             />
           )}
+          {step === 2 && (
+            <InfoAdicionais form={form} handleInputChange={handleInputChange} />
+          )}
 
           <div className="mt-4">
-            {step === 0 && (
+            {step >= 0 && (
               <button
                 type="button"
                 className="btn btn-danger me-2"
@@ -164,7 +172,7 @@ export const Add = () => {
               </button>
             )}
 
-            {step < 2 ? (
+            {step < 2 && (
               <button
                 type="button"
                 className="btn btn-primary"
@@ -172,10 +180,16 @@ export const Add = () => {
               >
                 Próximo
               </button>
-            ) : (
-              <button className="btn btn-success" disabled={loading}>
-                {loading ? "Salvando..." : "Cliente salvo, aguarde!"}
-              </button>
+            )}
+            {step === 2 && (
+              <button
+              type="button"
+              className="btn btn-success"
+              onClick={handleSubmit}
+              disabled={loading} // Botão desativado enquanto `loading` for true
+            >
+              {loading ? "Salvando..." : "Salvar"}
+            </button>
             )}
 
             {error && <p className="text-danger mt-3">{error}</p>}

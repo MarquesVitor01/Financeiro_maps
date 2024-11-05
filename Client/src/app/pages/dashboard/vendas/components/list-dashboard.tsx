@@ -10,13 +10,21 @@ import {
   faFilter,
   faDownload,
   faPlus,
+  faFile,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
 import { db } from "../../../../firebaseConfig";
-import { collection, getDocs, doc, deleteDoc, getDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  deleteDoc,
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 interface Venda {
   id: string;
@@ -37,7 +45,9 @@ interface ListDashboardProps {
   setTotalVendas: (total: number) => void;
 }
 
-export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) => {
+export const ListDashboard: React.FC<ListDashboardProps> = ({
+  setTotalVendas,
+}) => {
   const [vendas, setVendas] = useState<Venda[]>([]);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -50,7 +60,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) 
     endDate: "",
     dueDate: "",
     saleType: "",
-    salesPerson: ""
+    salesPerson: "",
   });
 
   const auth = getAuth();
@@ -69,9 +79,10 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) 
           ...doc.data(),
         })) as Venda[];
 
-        const filteredVendas = ((userId === adminUserId) || (userId === SupervisorUserId))
-          ? vendasList
-          : vendasList.filter((venda) => venda.createdBy === userId);
+        const filteredVendas =
+          userId === adminUserId || userId === SupervisorUserId
+            ? vendasList
+            : vendasList.filter((venda) => venda.createdBy === userId);
 
         setVendas(filteredVendas);
         setTotalVendas(filteredVendas.length);
@@ -107,7 +118,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) 
       if (vendaData) {
         await setDoc(doc(db, "cancelados", id), {
           ...vendaData,
-          deletedAt: new Date()
+          deletedAt: new Date(),
         });
       }
 
@@ -127,27 +138,44 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) 
       const lowerCaseTerm = searchTerm.toLowerCase();
       const matchesSearchTerm =
         (venda.cnpj && venda.cnpj.toLowerCase().includes(lowerCaseTerm)) ||
-        (venda.responsavel && venda.responsavel.toLowerCase().includes(lowerCaseTerm)) ||
+        (venda.cpf && venda.cpf.toLowerCase().includes(lowerCaseTerm)) ||
+        (venda.responsavel &&
+          venda.responsavel.toLowerCase().includes(lowerCaseTerm)) ||
         (venda.email1 && venda.email1.toLowerCase().includes(lowerCaseTerm)) ||
         (venda.email2 && venda.email2.toLowerCase().includes(lowerCaseTerm)) ||
-        (venda.operador && venda.operador.toLowerCase().includes(lowerCaseTerm));
+        (venda.operador &&
+          venda.operador.toLowerCase().includes(lowerCaseTerm));
 
       const { startDate, endDate, dueDate, saleType, salesPerson } = filters;
 
       const vendaData = new Date(venda.data);
-      const isStartDateValid = startDate ? vendaData.toDateString() === new Date(startDate).toDateString() : true;
+      const isStartDateValid = startDate
+        ? vendaData.toDateString() === new Date(startDate).toDateString()
+        : true;
 
-      const isDateInRange = (startDate && endDate)
-        ? vendaData >= new Date(startDate) && vendaData <= new Date(endDate)
-        : isStartDateValid;
+      const isDateInRange =
+        startDate && endDate
+          ? vendaData >= new Date(startDate) && vendaData <= new Date(endDate)
+          : isStartDateValid;
 
       const vendaDataVencimento = new Date(venda.dataVencimento);
-      const isDueDateValid = dueDate ? vendaDataVencimento.toDateString() === new Date(dueDate).toDateString() : true;
+      const isDueDateValid = dueDate
+        ? vendaDataVencimento.toDateString() ===
+          new Date(dueDate).toDateString()
+        : true;
 
       const isSaleTypeValid = saleType ? venda.contrato === saleType : true;
-      const isSalesPersonValid = salesPerson ? venda.operador === salesPerson : true;
+      const isSalesPersonValid = salesPerson
+        ? venda.operador === salesPerson
+        : true;
 
-      return matchesSearchTerm && isDateInRange && isDueDateValid && isSaleTypeValid && isSalesPersonValid;
+      return (
+        matchesSearchTerm &&
+        isDateInRange &&
+        isDueDateValid &&
+        isSaleTypeValid &&
+        isSalesPersonValid
+      );
     });
 
     return filteredClients;
@@ -178,7 +206,23 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) 
   const downloadClients = () => {
     const clientsToDownload = applyFilters();
 
-    const selectedFields = ["cnpj", "cpf", "razaoSocial", "responsavel", "email1", "email2", "fixo", "celular", "whatsapp", "operador", "valorVenda", "parcelas", "data", "validade", "dataVencimento"];
+    const selectedFields = [
+      "cnpj",
+      "cpf",
+      "razaoSocial",
+      "responsavel",
+      "email1",
+      "email2",
+      "fixo",
+      "celular",
+      "whatsapp",
+      "operador",
+      "valorVenda",
+      "parcelas",
+      "data",
+      "validade",
+      "dataVencimento",
+    ];
 
     const filteredData = clientsToDownload.map((venda) => {
       return selectedFields.reduce((selectedData, field) => {
@@ -193,8 +237,8 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) 
     const ws = XLSX.utils.json_to_sheet(filteredData);
 
     // Define o range de células e aplica o filtro
-    const range = XLSX.utils.decode_range(ws['!ref']!);
-    ws['!autofilter'] = { ref: XLSX.utils.encode_range(range) };
+    const range = XLSX.utils.decode_range(ws["!ref"]!);
+    ws["!autofilter"] = { ref: XLSX.utils.encode_range(range) };
 
     // Cria o workbook e adiciona a worksheet
     const wb = XLSX.utils.book_new();
@@ -204,13 +248,13 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) 
     XLSX.writeFile(wb, "planilha_vendas.xlsx");
   };
 
-
-
-
   return (
     <div className="list-dashboard">
       {modalExcel && (
-        <ModalExcel onClose={closeModalExcel} onApplyFilters={handleApplyFilters} />
+        <ModalExcel
+          onClose={closeModalExcel}
+          onApplyFilters={handleApplyFilters}
+        />
       )}
 
       <div className="header-list">
@@ -227,15 +271,14 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) 
             />
           </div>
           <div className="selects-container">
-            <Link to='/add' className="create-btn">
+            <Link to="/add" className="create-btn">
               <FontAwesomeIcon icon={faPlus} />
             </Link>
-            {
-              adminUserId &&
+            {adminUserId && (
               <button onClick={handleRemoveSelected} className="remove-btn">
                 <FontAwesomeIcon icon={faTrashAlt} />
               </button>
-            }
+            )}
             <button className="filtros-btn" onClick={openModalExcel}>
               <FontAwesomeIcon icon={faFilter} color="#fff" />
             </button>
@@ -284,15 +327,27 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) 
                     {venda.email1}
                   </td>
                   <td className={selectedItems.has(venda.id) ? "selected" : ""}>
-                    {venda.operador}
+                    {venda.operador.replace(/\./g, " ")}
                   </td>
 
                   <td className={"icon-container"}>
                     <Link to={`/editcontrato/${venda.id}`}>
-                      <FontAwesomeIcon icon={faEdit} className="icon-spacing text-dark" />
+                      <FontAwesomeIcon
+                        icon={faEdit}
+                        className="icon-spacing text-dark"
+                      />
+                    </Link>
+                    <Link to={`/comprovantes/${venda.id}`}>
+                      <FontAwesomeIcon
+                        icon={faFile}
+                        className="icon-spacing text-dark"
+                      />
                     </Link>
                     <Link to={`/contrato/${venda.id}`}>
-                      <FontAwesomeIcon icon={faEye} className="icon-spacing text-dark" />
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="icon-spacing text-dark"
+                      />
                     </Link>
                   </td>
                 </tr>
@@ -301,11 +356,19 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas }) 
           </table>
 
           <div className="pagination">
-            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
               <FontAwesomeIcon icon={faArrowLeft} />
             </button>
-            <span>{currentPage} de {totalPages}</span>
-            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+            <span>
+              {currentPage} de {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
               <FontAwesomeIcon icon={faArrowRight} />
             </button>
           </div>

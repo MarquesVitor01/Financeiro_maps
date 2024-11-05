@@ -14,7 +14,7 @@ export const HeaderDash: React.FC<HeaderDashProps> = ({ totalVendas }) => {
           <div className="header-dash">
             <div className="row">
               <div className="col-md-6 bemvindo-text">
-                <h3>Olá, {nome}</h3>
+                <h3>Olá, {nome.replace(/\./g, " ")}</h3>
               </div>
 
               <div className="header-info">

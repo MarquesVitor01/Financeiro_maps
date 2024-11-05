@@ -4,11 +4,12 @@ import { QRCodeSVG } from 'qrcode.react';
 interface VendaData {
   observacoes: string;
   qrcodeText: string;
+  renovacaoAutomatica: string;
 }
 
 interface EditInfoAdicionaisProps {
   form: VendaData | null;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
 
 const TextAreaField = ({
@@ -70,6 +71,34 @@ const InputField = ({
   </div>
 );
 
+const SelectField = ({
+  id,
+  label,
+  name,
+  value,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+}) => (
+  <div className="form-group mb-3">
+    <label htmlFor={id}>{label}</label>
+    <select
+      id={id}
+      name={name}
+      className="form-control"
+      value={value}
+      onChange={onChange}
+    >
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+  </div>
+);
+
 export const EditInfoAdicionais: React.FC<EditInfoAdicionaisProps> = ({ form, handleInputChange }) => {
   if (!form) return null;
 
@@ -86,6 +115,13 @@ export const EditInfoAdicionais: React.FC<EditInfoAdicionaisProps> = ({ form, ha
         placeholder="Adicione observações ou comentários relevantes..."
       />
 
+      <SelectField
+        id="renovacaoAutomatica"
+        label="Renovação Automática"
+        name="renovacaoAutomatica"
+        value={form.renovacaoAutomatica}
+        onChange={handleInputChange}
+      />
       <InputField
         id="qrcode"
         label="Texto para QR Code"
@@ -101,6 +137,7 @@ export const EditInfoAdicionais: React.FC<EditInfoAdicionaisProps> = ({ form, ha
           <QRCodeSVG value={form.qrcodeText} size={128} />
         </div>
       )}
+
     </div>
   );
 };

@@ -270,7 +270,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
                   <td
                     className={`${selectedItems.has(marketing.id) ? "selected" : ""} ${marketing.servicosConcluidos ? "servicos-realizados" : ""}`}
                   >
-                    {marketing.operador}
+                    {marketing.operador.replace(/\./g, " ")}
                   </td>
                   <td
                     className={`${selectedItems.has(marketing.id) ? "selected" : ""} ${marketing.servicosConcluidos ? "servicos-realizados" : ""}`}

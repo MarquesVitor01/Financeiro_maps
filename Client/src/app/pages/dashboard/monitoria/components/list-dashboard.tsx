@@ -224,7 +224,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
                     {venda.email1}
                   </td>
                   <td className={`${selectedItems.has(venda.id) ? "selected" : ""} ${venda.monitoriaConcluidaYes ? "concluida" : ""}`}>
-                    {venda.operador}
+                    {venda.operador.replace(/\./g, " ")}
                   </td>
                   <td className={`${selectedItems.has(venda.id) ? "selected" : ""} ${venda.monitoriaConcluidaYes ? "concluida" : ""}`}>
                     {venda.nomeMonitor}

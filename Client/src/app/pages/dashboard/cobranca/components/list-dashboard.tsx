@@ -206,7 +206,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiro
                     {financeiro.email1 || financeiro.email2}
                   </td>
                   <td className={`${selectedItems.has(financeiro.id) ? "selected" : ""}`}>
-                    {financeiro.operador}
+                    {financeiro.operador.replace(/\./g, " ")}
                   </td>
                   <td className={`${selectedItems.has(financeiro.id) ? "selected" : ""}`}>
                     {financeiro.operadorSelecionado ? financeiro.operadorSelecionado.label : ""}

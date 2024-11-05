@@ -339,7 +339,7 @@ const downloadClients = () => {
                   <td
                     className={`${selectedItems.has(marketing.id) ? "selected" : ""} ${marketing.encaminharCliente === "sim" ? "cobranca-encaminhado" : ""}`}
                   >
-                    {marketing.operador}
+                    {marketing.operador.replace(/\./g, " ")}
                   </td>
                   <td className="icon-container">
                     <Link to={`/contrato/${marketing.id}`}>

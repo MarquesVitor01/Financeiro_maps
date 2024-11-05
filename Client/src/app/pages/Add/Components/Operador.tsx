@@ -60,7 +60,6 @@ export const Operador: React.FC<OperadorProps> = ({
           value={form.parcelas}
           onChange={handleInputChange}
         >
-          <option value="">Selecione uma opção</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>

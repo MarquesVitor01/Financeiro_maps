@@ -40,6 +40,7 @@ interface ClientData {
   dataVencimento: string;
   qrcodeText: string;
   linkGoogle: string;
+  renovacaoAutomatica: string;
 }
 
 export const EditContrato = () => {
