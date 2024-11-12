@@ -71,7 +71,7 @@ export const Condicoes: React.FC = () => {
       </p>
       <div className="image-container">
         <FontAwesomeIcon icon={faRightLong} className="arrow right" color="yellow" />
-        <a href="https://docs.google.com/document/d/16LfzgC0AeCyj98f4hQftWszwba0_fLSk/edit"><img src="/img/img-termos.webp" alt="Imagem dos Termos" /></a>
+        <a href="https://drive.google.com/file/d/17YZoqz97bDo_1fWqzaDggmdN1iQSnMtn/view"><img src="/img/img-termos.webp" alt="Imagem dos Termos" /></a>
         <FontAwesomeIcon icon={faLeftLong} className="arrow left" color="yellow"/>
       </div>
 

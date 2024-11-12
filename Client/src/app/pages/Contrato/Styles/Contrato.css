@@ -24,6 +24,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin-top: 130px;
 }
 
 .condicoes p{
@@ -35,9 +36,9 @@
 
 .image-container {
     display: flex;
-    align-items: center;
-    margin-top: 20px; 
+    align-items: center; 
   }
+
 
   .image-container .arrow{
     font-size: 70px;
@@ -53,10 +54,11 @@
 .bonus h5{
   width: 652px;
     background-color: #59afd6;
-    padding-block: 10px;
+    padding-block: 7px;
     color: #Fff;
 }
 
 .bonus p{
     width: 600px;
+    font-size: 12px;
 }

@@ -16,7 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
 import { db } from "../../../../firebaseConfig";
-import { collection, getDocs, getDoc, setDoc, doc } from "firebase/firestore";
+import { collection, getDocs, getDoc, setDoc, doc, writeBatch } from "firebase/firestore";
 import { toast, ToastContainer } from "react-toastify";
 import * as XLSX from 'xlsx';
 
@@ -175,18 +175,13 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiro
         const salesList = salesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Sale[];
 
         const syncedSales = salesList.filter((sale) => sale.servicosConcluidos);
-
+        const batch = writeBatch(db);
         for (const sale of syncedSales) {
-            const marketingDocRef = doc(db, "financeiros", sale.id);
-
-            const docSnapshot = await getDoc(marketingDocRef);
-            if (!docSnapshot.exists()) {
-                await setDoc(marketingDocRef, {
-                    ...sale,
-                    id: sale.id,
-                });
-            }
+          const marketingDocRef = doc(db, "financeiros", sale.id);
+          batch.set(marketingDocRef, sale, { merge: true });
         }
+
+        await batch.commit();
 
         const financeirosSnapshot = await getDocs(collection(db, "financeiros"));
         const financeirosList = financeirosSnapshot.docs.map((doc) => ({
@@ -196,7 +191,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiro
 
         setFinanceiros(financeirosList);
         setTotalFinanceiros(financeirosList.length);
-        
+
         toast.success('Sincronização concluída!');
     } catch (error) {
         console.error("Erro ao sincronizar clientes:", error);

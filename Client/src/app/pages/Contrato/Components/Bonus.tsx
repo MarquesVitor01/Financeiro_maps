@@ -57,8 +57,8 @@ export const Bonus: React.FC = () => {
 
   return (
     clientData && (
-      <div className="bonus card text-center mt-4">
-        <h5 className="text-white py-2">BÔNUS</h5>
+      <div className="bonus card text-center mt-2">
+        <h5 className="text-white ">BÔNUS</h5>
         <div className="d-flex justify-content-center my-1">
           <div className="mx-2" onClick={() => toggleOption("criacao")}>
             <strong
@@ -114,7 +114,7 @@ export const Bonus: React.FC = () => {
           </p>
         </div>
 
-        <p className="mt-2">
+        <p className="">
           O PAGAMENTO PODE SER FEITO ATRAVÉS DO BOLETO BANCÁRIO OU PIX QR-CODE DISPONÍVEL NO BOLETO, ENVIADO ATRAVÉS DO E-MAIL E WHATSAPP DO CONTRATANTE.
           <br />
           ACEITE REALIZADO DE FORMA VERBAL; PARA VERIFICAR SUA ADESÃO.
@@ -123,14 +123,14 @@ export const Bonus: React.FC = () => {
         </p>
         <div className="">
           {clientData.qrcodeText && (
-            <div className="mt-3">
-              <QRCodeSVG value={clientData.qrcodeText} size={128} />
+            <div className="">
+              <QRCodeSVG value={clientData.qrcodeText} size={105} />
             </div>
           )}
         </div>
 
         <h5 className="mt-2">CENTRAL DE ATENDIMENTO</h5>
-        <p>(11) 4200-6110 / 0800 050 0069</p>
+        <p>(11) 3939-2301 / 0800 580 2766 / (11) 3195-8710</p>
         <p>
           <a href="mailto:MARKETING@GRUPOMAPSEMPRESAS.com.br">
             MARKETING@GRUPOMAPSEMPRESAS.com.br
@@ -142,14 +142,14 @@ export const Bonus: React.FC = () => {
         </p>
         <p>PARA ATENDIMENTO VIA WHATSAPP BASTA CLICAR NO ÍCONE ABAIXO:</p>
         <a
-          href="https://wa.me/551142006110"
+          href="https://wa.link/ulgll4"
           target="_blank"
           rel="noopener noreferrer"
         >
           <img
             src="/img/img-wpp-contrato.webp"
             alt="WhatsApp"
-            style={{ width: "200px" }}
+            style={{ width: "170px" }}
           />
         </a>
       </div>

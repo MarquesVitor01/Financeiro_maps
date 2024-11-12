@@ -238,7 +238,7 @@ export const Perfil: React.FC = () => {
                         placeholder="Pesquisar usuários..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="search-input"
+                        className="search-perfil"
                       />
 
                       {displayedUsers.map((usuario) => (

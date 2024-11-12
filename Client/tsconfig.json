@@ -23,5 +23,5 @@
   "include": [
     "src",
     "types/**/*"
-  ]
+, "src/app/pages/Comprovantes/Components", "src/app/pages/Comprovantes/Comprovantes.tsx"  ]
 }

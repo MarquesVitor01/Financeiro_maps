@@ -35,50 +35,50 @@ interface DadosEmpresaProps {
   };
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
   tipoDocumento: string;
-  handleToggleDocumento: () => void;
-  isRotated: boolean;
+  // handleToggleDocumento: () => void;
+  // isRotated: boolean;
 }
 
 export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
   form,
   handleInputChange,
-  tipoDocumento,
-  handleToggleDocumento,
-  isRotated,
+  // tipoDocumento,
+  // handleToggleDocumento,
+  // isRotated,
 }) => {
-  const [formattedDocument, setFormattedDocument] = useState<string>(tipoDocumento === "CPF" ? form.cpf : form.cnpj);
+  // const [formattedDocument, setFormattedDocument] = useState<string>(tipoDocumento === "CPF" ? form.cpf : form.cnpj);
 
-  const formatCNPJ = (value: string) => {
-    return value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1/$2').replace(/(\d{4})(\d{1,2})$/, '$1-$2');
-  };
+  // const formatCNPJ = (value: string) => {
+  //   return value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1/$2').replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+  // };
 
-  const formatCPF = (value: string) => {
-    return value.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-  };
+  // const formatCPF = (value: string) => {
+  //   return value.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  // };
 
-  const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+  // const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value } = e.target;
 
-    const maxLength = tipoDocumento === "CPF" ? 14 : 18;
+  //   const maxLength = tipoDocumento === "CPF" ? 14 : 18;
 
-    const trimmedValue = value.slice(0, maxLength);
+  //   const trimmedValue = value.slice(0, maxLength);
 
-    const formattedValue = tipoDocumento === "CPF" ? formatCPF(trimmedValue) : formatCNPJ(trimmedValue);
-    
-    setFormattedDocument(formattedValue);
+  //   const formattedValue = tipoDocumento === "CPF" ? formatCPF(trimmedValue) : formatCNPJ(trimmedValue);
 
-    if (tipoDocumento === "CPF") {
-      if (form.cnpj && form.cnpj.replace(/\D/g, '') !== "") {
-        handleInputChange({ target: { name: "cnpj", value: "" } } as React.ChangeEvent<HTMLInputElement>);
-      }
-    } else {
-      if (form.cpf && form.cpf.replace(/\D/g, '') !== "") {
-        handleInputChange({ target: { name: "cpf", value: "" } } as React.ChangeEvent<HTMLInputElement>);
-      }
-    }
+  //   setFormattedDocument(formattedValue);
 
-    handleInputChange({ target: { name: tipoDocumento === "CPF" ? "cpf" : "cnpj", value: formattedValue } } as React.ChangeEvent<HTMLInputElement>);
-  };
+  //   if (tipoDocumento === "CPF") {
+  //     if (form.cnpj && form.cnpj.replace(/\D/g, '') !== "") {
+  //       handleInputChange({ target: { name: "cnpj", value: "" } } as React.ChangeEvent<HTMLInputElement>);
+  //     }
+  //   } else {
+  //     if (form.cpf && form.cpf.replace(/\D/g, '') !== "") {
+  //       handleInputChange({ target: { name: "cpf", value: "" } } as React.ChangeEvent<HTMLInputElement>);
+  //     }
+  //   }
+
+  //   handleInputChange({ target: { name: tipoDocumento === "CPF" ? "cpf" : "cnpj", value: formattedValue } } as React.ChangeEvent<HTMLInputElement>);
+  // };
 
 
   return (
@@ -98,7 +98,7 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
         />
       </div>
 
-      <div className="form-group mb-3 col-md-4">
+      {/* <div className="form-group mb-3 col-md-4">
         <label htmlFor="documento">{tipoDocumento}</label>
         <div className="input-group">
           <input
@@ -121,6 +121,30 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
             />
           </button>
         </div>
+      </div> */}
+      <div className="form-group mb-3 col-md-4">
+        <label htmlFor="nomeFantasia">CNPJ</label>
+        <input
+          type="text"
+          className="form-control"
+          id="cnpj"
+          name="cnpj"
+          value={form.cnpj}
+          onChange={handleInputChange}
+          placeholder="Insira o cnpj"
+        />
+      </div>
+      <div className="form-group mb-3 col-md-4">
+        <label htmlFor="nomeFantasia">CPF</label>
+        <input
+          type="text"
+          className="form-control"
+          id="cpf"
+          name="cpf"
+          value={form.cpf}
+          onChange={handleInputChange}
+          placeholder="Insira o cpf"
+        />
       </div>
 
       <div className="form-group mb-3 col-md-4">

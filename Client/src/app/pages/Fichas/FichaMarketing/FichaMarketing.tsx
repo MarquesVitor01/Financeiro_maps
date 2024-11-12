@@ -78,11 +78,13 @@ export const FichaMarketing: React.FC = () => {
                 <p><strong>Whatsapp:</strong> {clientData.whatsapp}</p>
                 <p><strong>Valor da Venda:</strong> {clientData.valorVenda}</p>
                 <p><strong>Vencimento:</strong> {clientData.dataVencimento}</p>
+                <p><strong>Observações:</strong> {clientData.observacoes}</p>
               </div>
             </div>
             <div className="col-md-6">
               <MarketingForm form={clientData} onSubmit={handleMarketingSubmit} />
             </div>
+            
           </div>
         </div>
       </div>

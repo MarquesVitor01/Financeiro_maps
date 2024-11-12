@@ -9,7 +9,7 @@ interface OperadorProps {
     equipe: string;
     validade: string;
     parcelas: string;
-    valorVenda: string;
+    valorVenda: number;
     contrato: string;
     formaPagamento: string;
   };

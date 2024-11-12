@@ -16,11 +16,12 @@ import {
   FichaMarketing,
   FichaFinanceiro,
   FichaCobranca,
+  FichaBoleto
 } from "../pages";
 import Contrato from "../pages/Contrato/Contrato";
 import { Financeiro } from "../pages/dashboard/financeiro/Financeiro";
 import { Cobranca } from "../pages/dashboard/cobranca/Cobranca";
-import Comprovantes from "../pages/Comprovantes/Comprovantes";
+import { Comprovantes } from "../pages/Comprovantes/Comprovantes";
 
 export const LocalRoutes: React.FC = () => {
   return (
@@ -45,6 +46,7 @@ export const LocalRoutes: React.FC = () => {
           <Route path="/fichamarketing/:id" element={<PrivateRoute element={<FichaMarketing />} requiredCargo="marketing" />} />
           <Route path="/fichafinanceiro/:id" element={<PrivateRoute element={<FichaFinanceiro />} requiredCargo="financeiro" />} />
           <Route path="/fichacobranca/:id" element={<PrivateRoute element={<FichaCobranca />} requiredCargo="cobranca" />} />
+          <Route path="/fichaboleto/:id" element={<PrivateRoute element={<FichaBoleto />} />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

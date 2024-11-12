@@ -15,7 +15,8 @@ import {
 import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
 import { db } from "../../../../firebaseConfig";
-import { collection, getDocs, getDoc, setDoc, doc } from "firebase/firestore";
+import { collection, getDocs, setDoc, doc, writeBatch } from "firebase/firestore";
+import { toast, ToastContainer } from "react-toastify";
 
 interface Marketing {
   id: string;
@@ -61,6 +62,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
   const itemsPerPage = 5;
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [syncLoading, setSyncLoading] = useState<boolean>(false);
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
@@ -85,7 +87,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
         setTotalMarketings(marketingsList.length);
 
         const totalRealizados = marketingsList.filter(marketing => marketing.servicosConcluidos).length;
-        setTotalRealizados(totalRealizados); 
+        setTotalRealizados(totalRealizados);
       } catch (error) {
         console.error("Erro ao buscar marketings:", error);
       } finally {
@@ -95,7 +97,6 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
 
     fetchMarketings();
   }, [setTotalMarketings, setTotalRealizados]);
-
 
   const applyFilters = () => {
     let filteredClients = marketings.filter((marketing) => {
@@ -155,39 +156,42 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
   };
 
   const handleSyncClients = async () => {
-    const vendasCollection = collection(db, "vendas"); 
-    const vendasSnapshot = await getDocs(vendasCollection);
-    const vendasList = vendasSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as venda[];
+    setSyncLoading(true); 
+    try {
+      const vendasCollection = collection(db, "vendas");
+      const vendasSnapshot = await getDocs(vendasCollection);
+      const vendasList = vendasSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as venda[];
 
-    const syncedvendas = vendasList.filter((venda) => venda.monitoriaConcluidaYes);
+      const syncedvendas = vendasList.filter((venda) => venda.monitoriaConcluidaYes);
 
-    for (const venda of syncedvendas) {
-      const marketingDocRef = doc(db, "marketings", venda.id); 
-
-      const docSnapshot = await getDoc(marketingDocRef);
-      if (!docSnapshot.exists()) { 
-        await setDoc(marketingDocRef, { 
-          ...venda, 
-          id: venda.id, 
-        });
+      const batch = writeBatch(db);
+      for (const venda of syncedvendas) {
+        const marketingDocRef = doc(db, "marketings", venda.id);
+        batch.set(marketingDocRef, venda, { merge: true });
       }
+
+      await batch.commit();
+
+      const marketingsSnapshot = await getDocs(collection(db, "marketings"));
+      const marketingsList = marketingsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Marketing[];
+
+      setMarketings(marketingsList);
+      setTotalMarketings(marketingsList.length);
+      toast.success('Sincronização concluída!');
+    } catch (error) {
+      console.error("Erro ao sincronizar clientes:", error);
+      toast.error('Erro na sincronização!');
+    } finally {
+      setSyncLoading(false); 
     }
-
-    const marketingsSnapshot = await getDocs(collection(db, "marketings"));
-    const marketingsList = marketingsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Marketing[];
-
-    setMarketings(marketingsList);
-    setTotalMarketings(marketingsList.length);
   };
 
   const toggleConcluido = () => {
     setShowConcluidas(!showConcluidas);
   };
-
-
   return (
     <div className="list-dashboard">
       {modalExcel && (
@@ -223,9 +227,13 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
                 <FontAwesomeIcon icon={faBars} color="#fff" />
               </button>
             )}
-            <button className="remove-btn" onClick={handleSyncClients}>
-              <FontAwesomeIcon icon={faSync} color="#fff" />
-            </button>
+            <button className="remove-btn" onClick={handleSyncClients} disabled={syncLoading}>
+              {syncLoading ? (
+                <FontAwesomeIcon icon={faSync} spin color="#fff" />
+              ) : (
+                <FontAwesomeIcon icon={faSync} color="#fff" />
+              )}
+              </button>
           </div>
         </div>
       </div>
@@ -239,7 +247,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
           <table className="table">
             <thead>
               <tr>
-              <th></th>
+                <th></th>
                 <th>CNPJ</th>
                 <th>Nome</th>
                 <th>Email</th>
@@ -298,6 +306,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
             <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
               <FontAwesomeIcon icon={faArrowRight} />
             </button>
+            <ToastContainer />
           </div>
         </>
       )}

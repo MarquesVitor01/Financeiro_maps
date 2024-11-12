@@ -47,7 +47,7 @@ export const Header: React.FC = () => {
           className="mb-1"
         />
 
-        <div className="row">
+        <div className="row my-2">
           <div className="col-md-4">
             <p><strong>CONTRATO Nº:</strong> {clientData.numeroContrato}</p>
           </div>

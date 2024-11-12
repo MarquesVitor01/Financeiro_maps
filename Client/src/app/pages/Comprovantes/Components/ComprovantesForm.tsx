@@ -16,7 +16,7 @@ interface FinanceiroFormProps {
   onSubmit: (data: Form) => void;
 }
 
-export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({ form: initialForm, onSubmit }) => {
+export const ComprovantesForm: React.FC<FinanceiroFormProps> = ({ form: initialForm, onSubmit }) => {
   const [form, setForm] = useState<Form>({
     valorPago: "",
     acordo: "",
@@ -24,7 +24,7 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({ form: initialFor
     dataPagamento: "",
     encaminharCliente: "",
     operadorSelecionado: null,
-    comprovante: "",
+    comprovante: ""
   });
 
   const cobranca = [
@@ -51,12 +51,7 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({ form: initialFor
     }));
   };
 
-  const handleSelectChange = (selectedOption: { value: string; label: string } | null) => {
-    setForm((prevForm) => ({
-      ...prevForm,
-      operadorSelecionado: selectedOption,
-    }));
-  };
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,21 +73,6 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({ form: initialFor
             value={form.valorPago}
             onChange={handleInputChange}
           />
-
-          {/* <label htmlFor="acordoCobrança" className="form-label">
-            Possui acordo com a cobrança?
-          </label>
-          <select
-            className="form-select mb-3"
-            id="acordoCobrança"
-            name="acordo"
-            value={form.acordo}
-            onChange={handleInputChange}
-          >
-            <option value="">Selecione uma opção</option>
-            <option value="sim">Sim</option>
-            <option value="nao">Não</option>
-          </select> */}
 
           <label htmlFor="rePagamento" className="form-label">
             O cliente realizou o pagamento?
@@ -133,32 +113,6 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({ form: initialFor
             value={form.comprovante}
             onChange={handleInputChange}
           />
-          <hr className="w-50 mx-auto" />
-
-          <div className="encaminheCob">
-            <label htmlFor="">Deseja encaminhar para a cobrança?</label>
-            <select
-              className="form-select mb-3"
-              id="encaminharCliente"
-              name="encaminharCliente"
-              value={form.encaminharCliente}
-              onChange={handleInputChange}
-            >
-              <option value="">Selecione uma opção</option>
-              <option value="sim">Sim</option>
-              <option value="nao">Não</option>
-            </select>
-
-            <label className="form-label">Selecione ou digite um operador:</label>
-            <Select
-              options={cobranca}
-              value={form.operadorSelecionado}
-              onChange={handleSelectChange}
-              isClearable
-              isSearchable
-            />
-          </div>
-
           <div className="d-flex gap-3 mx-auto">
             <button type="button" className="btn btn-danger mt-4" onClick={sairFicha}>
               Sair

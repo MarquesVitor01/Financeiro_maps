@@ -11,6 +11,7 @@ import {
   faDownload,
   faPlus,
   faFile,
+  faMoneyCheckDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
@@ -346,6 +347,12 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                     <Link to={`/contrato/${venda.id}`}>
                       <FontAwesomeIcon
                         icon={faEye}
+                        className="icon-spacing text-dark"
+                      />
+                    </Link>
+                    <Link to={`/fichaboleto/${venda.id}`}>
+                      <FontAwesomeIcon
+                        icon={faMoneyCheckDollar}
                         className="icon-spacing text-dark"
                       />
                     </Link>
