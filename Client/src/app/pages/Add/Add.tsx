@@ -187,6 +187,9 @@ export const Add = () => {
       if (boletoResponse) {
         await saveBoletoData(boletoResponse);
       }
+      console.log(boletoResponse);
+      console.log(boletoData);
+      
 
       setRedirect(true);
     } catch (error) {

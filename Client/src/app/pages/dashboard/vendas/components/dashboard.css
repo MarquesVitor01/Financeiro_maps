@@ -351,6 +351,13 @@ tbody tr:last-of-type td {
     left: 62%;
 }
 
+.custom-tooltip {
+    border-radius: 20px!important; /* Ajuste o valor para o nível de arredondamento desejado */
+    padding: 5px 10px;
+    background-color: #383838!important; /* Cor de fundo do tooltip */
+    color: #fff!important; /* Cor do texto */
+  }
+
 @media screen and (max-width:992px) {
     .list-dashboard{
         margin-left: 50px;

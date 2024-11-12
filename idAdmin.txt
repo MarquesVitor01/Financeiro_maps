@@ -1,0 +1,4 @@
+Navbar
+Setores
+privateRoutes
+perfil

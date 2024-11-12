@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
 import { db } from "../../../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
+import { Tooltip } from "react-tooltip";
 
 interface Financeiro {
   id: string;
@@ -35,9 +36,11 @@ interface ListDashboardProps {
   setTotalFinanceiros: (total: number) => void;
 }
 
-export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiros }) => {
+export const ListDashboard: React.FC<ListDashboardProps> = ({
+  setTotalFinanceiros,
+}) => {
   const [financeiros, setFinanceiros] = useState<Financeiro[]>([]);
-  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [selectedItems] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [modalExcel, setModalExcel] = useState(false);
   const itemsPerPage = 5;
@@ -49,7 +52,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiro
     dueDate: "",
     saleType: "",
     salesPerson: "",
-    cobPerson: ""
+    cobPerson: "",
   });
 
   useEffect(() => {
@@ -65,8 +68,10 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiro
 
         setFinanceiros(financeirosList);
         // Define o total de clientes que têm encaminharCliente igual a "sim"
-        const totalFinanceiros = financeirosList.filter(financeiro => financeiro.encaminharCliente === "sim").length;
-        setTotalFinanceiros(totalFinanceiros); 
+        const totalFinanceiros = financeirosList.filter(
+          (financeiro) => financeiro.encaminharCliente === "sim"
+        ).length;
+        setTotalFinanceiros(totalFinanceiros);
       } catch (error) {
         console.error("Erro ao buscar financeiros:", error);
       } finally {
@@ -77,55 +82,83 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiro
     fetchFinanceiros();
   }, [setTotalFinanceiros]);
 
-  const handleCheckboxChange = (id: string) => {
-    setSelectedItems((prevSelectedItems) => {
-      const newSelectedItems = new Set(prevSelectedItems);
-      if (newSelectedItems.has(id)) {
-        newSelectedItems.delete(id);
-      } else {
-        newSelectedItems.add(id);
-      }
-      return newSelectedItems;
-    });
-  };
+  // const handleCheckboxChange = (id: string) => {
+  //   setSelectedItems((prevSelectedItems) => {
+  //     const newSelectedItems = new Set(prevSelectedItems);
+  //     if (newSelectedItems.has(id)) {
+  //       newSelectedItems.delete(id);
+  //     } else {
+  //       newSelectedItems.add(id);
+  //     }
+  //     return newSelectedItems;
+  //   });
+  // };
 
   const applyFilters = () => {
     let filteredClients = financeiros.filter((financeiro) => {
       const lowerCaseTerm = searchTerm.toLowerCase();
       const matchesSearchTerm =
-        (financeiro.cnpj && financeiro.cnpj.toLowerCase().includes(lowerCaseTerm)) ||
-        (financeiro.cpf && financeiro.cpf.toLowerCase().includes(lowerCaseTerm)) ||
-        (financeiro.responsavel && financeiro.responsavel.toLowerCase().includes(lowerCaseTerm)) ||
-        (financeiro.email1 && financeiro.email1.toLowerCase().includes(lowerCaseTerm)) ||
-        (financeiro.email2 && financeiro.email2.toLowerCase().includes(lowerCaseTerm)) ||
-        (financeiro.operador && financeiro.operador.toLowerCase().includes(lowerCaseTerm));
-  
-      const { startDate, endDate, dueDate, saleType, salesPerson, cobPerson } = filters;
-  
+        (financeiro.cnpj &&
+          financeiro.cnpj.toLowerCase().includes(lowerCaseTerm)) ||
+        (financeiro.cpf &&
+          financeiro.cpf.toLowerCase().includes(lowerCaseTerm)) ||
+        (financeiro.responsavel &&
+          financeiro.responsavel.toLowerCase().includes(lowerCaseTerm)) ||
+        (financeiro.email1 &&
+          financeiro.email1.toLowerCase().includes(lowerCaseTerm)) ||
+        (financeiro.email2 &&
+          financeiro.email2.toLowerCase().includes(lowerCaseTerm)) ||
+        (financeiro.operador &&
+          financeiro.operador.toLowerCase().includes(lowerCaseTerm));
+
+      const { startDate, endDate, dueDate, saleType, salesPerson, cobPerson } =
+        filters;
+
       const financeiroData = new Date(financeiro.data);
-      const isStartDateValid = startDate ? financeiroData.toDateString() === new Date(startDate).toDateString() : true;
-  
-      const isDateInRange = (startDate && endDate)
-        ? financeiroData >= new Date(startDate) && financeiroData <= new Date(endDate)
-        : isStartDateValid;
-  
+      const isStartDateValid = startDate
+        ? financeiroData.toDateString() === new Date(startDate).toDateString()
+        : true;
+
+      const isDateInRange =
+        startDate && endDate
+          ? financeiroData >= new Date(startDate) &&
+            financeiroData <= new Date(endDate)
+          : isStartDateValid;
+
       const financeiroDataVencimento = new Date(financeiro.dataVencimento);
-      const isDueDateValid = dueDate ? financeiroDataVencimento.toDateString() === new Date(dueDate).toDateString() : true;
-  
-      const isSaleTypeValid = saleType ? financeiro.contrato === saleType : true;
-      const isSalesPersonValid = salesPerson ? financeiro.operador === salesPerson : true;
-      const isCobPersonValid = cobPerson ? 
-        (financeiro.operadorSelecionado && financeiro.operadorSelecionado.value === cobPerson) : true;
-  
+      const isDueDateValid = dueDate
+        ? financeiroDataVencimento.toDateString() ===
+          new Date(dueDate).toDateString()
+        : true;
+
+      const isSaleTypeValid = saleType
+        ? financeiro.contrato === saleType
+        : true;
+      const isSalesPersonValid = salesPerson
+        ? financeiro.operador === salesPerson
+        : true;
+      const isCobPersonValid = cobPerson
+        ? financeiro.operadorSelecionado &&
+          financeiro.operadorSelecionado.value === cobPerson
+        : true;
+
       // Verifique se encaminharCliente é "sim"
       const isEncaminharClienteValid = financeiro.encaminharCliente === "sim";
-  
-      return matchesSearchTerm && isDateInRange && isDueDateValid && isSaleTypeValid && isSalesPersonValid && isCobPersonValid && isEncaminharClienteValid;
+
+      return (
+        matchesSearchTerm &&
+        isDateInRange &&
+        isDueDateValid &&
+        isSaleTypeValid &&
+        isSalesPersonValid &&
+        isCobPersonValid &&
+        isEncaminharClienteValid
+      );
     });
-  
+
     return filteredClients;
   };
-  
+
   const filteredClients = applyFilters();
   const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
   const currentClients = filteredClients.slice(
@@ -147,10 +180,33 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiro
     setModalExcel(false);
   };
 
+  const formatCPF = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{3})(\d)/, "$1.$2")
+      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4")
+      .substring(0, 14);
+  };
+
+  // Função para formatar o CNPJ (visual)
+  const formatCNPJ = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "$1.$2")
+      .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4")
+      .replace(/(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5")
+      .substring(0, 18);
+  };
+
   return (
     <div className="list-dashboard">
       {modalExcel && (
-        <ModalExcel onClose={closeModalExcel} onApplyFilters={handleApplyFilters} />
+        <ModalExcel
+          onClose={closeModalExcel}
+          onApplyFilters={handleApplyFilters}
+        />
       )}
 
       <div className="header-list">
@@ -167,10 +223,18 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiro
             />
           </div>
           <div className="selects-container">
-            <button className="filtros-btn" onClick={openModalExcel}>
+            <button
+              className="filtros-btn"
+              onClick={openModalExcel}
+              data-tooltip-id="tooltip-filter"
+              data-tooltip-content="Aplicar filtros"
+            >
               <FontAwesomeIcon icon={faFilter} color="#fff" />
             </button>
           </div>
+
+          {/* Tooltip */}
+          <Tooltip id="tooltip-filter" place="top" className="custom-tooltip" />
         </div>
       </div>
 
@@ -184,7 +248,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiro
             <thead>
               <tr>
                 <th></th>
-                <th>CNPJ</th>
+                <th>CNPJ/CPF</th>
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Operador</th>
@@ -196,40 +260,100 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalFinanceiro
               {currentClients.map((financeiro) => (
                 <tr key={financeiro.id}>
                   <td></td>
-                  <td className={`${selectedItems.has(financeiro.id) ? "selected" : ""}`}>
-                    {financeiro.cnpj || financeiro.cpf}
+                  <td
+                    className={
+                      selectedItems.has(financeiro.id) ? "selected" : ""
+                    }
+                  >
+                    {financeiro.cnpj
+                      ? formatCNPJ(financeiro.cnpj)
+                      : financeiro.cpf
+                      ? formatCPF(financeiro.cpf)
+                      : financeiro.cnpj || financeiro.cpf}
                   </td>
-                  <td className={`${selectedItems.has(financeiro.id) ? "selected" : ""}`}>
+                  <td
+                    className={`${
+                      selectedItems.has(financeiro.id) ? "selected" : ""
+                    }`}
+                  >
                     {financeiro.responsavel}
                   </td>
-                  <td className={`${selectedItems.has(financeiro.id) ? "selected" : ""}`}>
+                  <td
+                    className={`${
+                      selectedItems.has(financeiro.id) ? "selected" : ""
+                    }`}
+                  >
                     {financeiro.email1 || financeiro.email2}
                   </td>
-                  <td className={`${selectedItems.has(financeiro.id) ? "selected" : ""}`}>
+                  <td
+                    className={`${
+                      selectedItems.has(financeiro.id) ? "selected" : ""
+                    }`}
+                  >
                     {financeiro.operador.replace(/\./g, " ")}
                   </td>
-                  <td className={`${selectedItems.has(financeiro.id) ? "selected" : ""}`}>
-                    {financeiro.operadorSelecionado ? financeiro.operadorSelecionado.label : ""}
+                  <td
+                    className={`${
+                      selectedItems.has(financeiro.id) ? "selected" : ""
+                    }`}
+                  >
+                    {financeiro.operadorSelecionado
+                      ? financeiro.operadorSelecionado.label
+                      : ""}
                   </td>
                   <td className="icon-container">
-                    <Link to={`/contrato/${financeiro.id}`}>
-                      <FontAwesomeIcon icon={faEye} className="icon-spacing text-dark" />
+                    <Link
+                      to={`/contrato/${financeiro.id}`}
+                      data-tooltip-id="tooltip-eye"
+                      data-tooltip-content="Visualizar contrato"
+                    >
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="icon-spacing text-dark"
+                      />
                     </Link>
-                    <Link to={`/fichacobranca/${financeiro.id}`}>
-                      <FontAwesomeIcon icon={faTableList} className="icon-spacing text-dark" />
+                    <Link
+                      to={`/fichacobranca/${financeiro.id}`}
+                      data-tooltip-id="tooltip-financeiro"
+                      data-tooltip-content="Ficha cobrança"
+                    >
+                      <FontAwesomeIcon
+                        icon={faTableList}
+                        className="icon-spacing text-dark"
+                      />
                     </Link>
                   </td>
+
+                  {/* Tooltips */}
+                  <Tooltip
+                    id="tooltip-eye"
+                    place="top"
+                    className="custom-tooltip"
+                  />
+                  <Tooltip
+                    id="tooltip-financeiro"
+                    place="top"
+                    className="custom-tooltip"
+                  />
                 </tr>
               ))}
             </tbody>
           </table>
 
           <div className="pagination">
-            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
               <FontAwesomeIcon icon={faArrowLeft} />
             </button>
-            <span>Página {currentPage} de {totalPages}</span>
-            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+            <span>
+              Página {currentPage} de {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
               <FontAwesomeIcon icon={faArrowRight} />
             </button>
           </div>

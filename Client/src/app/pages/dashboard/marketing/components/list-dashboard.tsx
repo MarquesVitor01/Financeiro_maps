@@ -15,8 +15,14 @@ import {
 import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
 import { db } from "../../../../firebaseConfig";
-import { collection, getDocs, setDoc, doc, writeBatch } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  writeBatch,
+} from "firebase/firestore";
 import { toast, ToastContainer } from "react-toastify";
+import { Tooltip } from "react-tooltip";
 
 interface Marketing {
   id: string;
@@ -54,9 +60,12 @@ interface ListDashboardProps {
   setTotalRealizados: (total: number) => void;
 }
 
-export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings, setTotalRealizados }) => {
+export const ListDashboard: React.FC<ListDashboardProps> = ({
+  setTotalMarketings,
+  setTotalRealizados,
+}) => {
   const [marketings, setMarketings] = useState<Marketing[]>([]);
-  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [selectedItems] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [modalExcel, setModalExcel] = useState(false);
   const itemsPerPage = 5;
@@ -68,7 +77,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
     endDate: "",
     dueDate: "",
     vendaType: "",
-    vendasPerson: ""
+    vendasPerson: "",
   });
   const [showConcluidas, setShowConcluidas] = useState(false);
 
@@ -86,7 +95,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
         setMarketings(marketingsList);
         setTotalMarketings(marketingsList.length);
 
-        const totalRealizados = marketingsList.filter(marketing => marketing.servicosConcluidos).length;
+        const totalRealizados = marketingsList.filter(
+          (marketing) => marketing.servicosConcluidos
+        ).length;
         setTotalRealizados(totalRealizados);
       } catch (error) {
         console.error("Erro ao buscar marketings:", error);
@@ -102,33 +113,58 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
     let filteredClients = marketings.filter((marketing) => {
       const lowerCaseTerm = searchTerm.toLowerCase();
       const matchesSearchTerm =
-        (marketing.cnpj && marketing.cnpj.toLowerCase().includes(lowerCaseTerm)) ||
-        (marketing.cpf && marketing.cpf.toLowerCase().includes(lowerCaseTerm)) ||
-        (marketing.responsavel && marketing.responsavel.toLowerCase().includes(lowerCaseTerm)) ||
-        (marketing.email1 && marketing.email1.toLowerCase().includes(lowerCaseTerm)) ||
-        (marketing.email2 && marketing.email2.toLowerCase().includes(lowerCaseTerm)) ||
-        (marketing.operador && marketing.operador.toLowerCase().includes(lowerCaseTerm));
+        (marketing.cnpj &&
+          marketing.cnpj.toLowerCase().includes(lowerCaseTerm)) ||
+        (marketing.cpf &&
+          marketing.cpf.toLowerCase().includes(lowerCaseTerm)) ||
+        (marketing.responsavel &&
+          marketing.responsavel.toLowerCase().includes(lowerCaseTerm)) ||
+        (marketing.email1 &&
+          marketing.email1.toLowerCase().includes(lowerCaseTerm)) ||
+        (marketing.email2 &&
+          marketing.email2.toLowerCase().includes(lowerCaseTerm)) ||
+        (marketing.operador &&
+          marketing.operador.toLowerCase().includes(lowerCaseTerm));
 
       const { startDate, endDate, dueDate, vendaType, vendasPerson } = filters;
 
       const marketingData = new Date(marketing.data);
-      const isStartDateValid = startDate ? marketingData.toDateString() === new Date(startDate).toDateString() : true;
+      const isStartDateValid = startDate
+        ? marketingData.toDateString() === new Date(startDate).toDateString()
+        : true;
 
-      const isDateInRange = (startDate && endDate)
-        ? marketingData >= new Date(startDate) && marketingData <= new Date(endDate)
-        : isStartDateValid;
+      const isDateInRange =
+        startDate && endDate
+          ? marketingData >= new Date(startDate) &&
+            marketingData <= new Date(endDate)
+          : isStartDateValid;
 
       const marketingDataVencimento = new Date(marketing.dataVencimento);
-      const isDueDateValid = dueDate ? marketingDataVencimento.toDateString() === new Date(dueDate).toDateString() : true;
+      const isDueDateValid = dueDate
+        ? marketingDataVencimento.toDateString() ===
+          new Date(dueDate).toDateString()
+        : true;
 
-      const isvendaTypeValid = vendaType ? marketing.contrato === vendaType : true;
-      const isvendasPersonValid = vendasPerson ? marketing.operador === vendasPerson : true;
+      const isvendaTypeValid = vendaType
+        ? marketing.contrato === vendaType
+        : true;
+      const isvendasPersonValid = vendasPerson
+        ? marketing.operador === vendasPerson
+        : true;
 
-      return matchesSearchTerm && isDateInRange && isDueDateValid && isvendaTypeValid && isvendasPersonValid;
+      return (
+        matchesSearchTerm &&
+        isDateInRange &&
+        isDueDateValid &&
+        isvendaTypeValid &&
+        isvendasPersonValid
+      );
     });
 
     if (showConcluidas) {
-      filteredClients = filteredClients.filter((marketing) => !marketing.servicosConcluidos);
+      filteredClients = filteredClients.filter(
+        (marketing) => !marketing.servicosConcluidos
+      );
     }
 
     return filteredClients;
@@ -156,13 +192,18 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
   };
 
   const handleSyncClients = async () => {
-    setSyncLoading(true); 
+    setSyncLoading(true);
     try {
       const vendasCollection = collection(db, "vendas");
       const vendasSnapshot = await getDocs(vendasCollection);
-      const vendasList = vendasSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as venda[];
+      const vendasList = vendasSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as venda[];
 
-      const syncedvendas = vendasList.filter((venda) => venda.monitoriaConcluidaYes);
+      const syncedvendas = vendasList.filter(
+        (venda) => venda.monitoriaConcluidaYes
+      );
 
       const batch = writeBatch(db);
       for (const venda of syncedvendas) {
@@ -180,22 +221,45 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
 
       setMarketings(marketingsList);
       setTotalMarketings(marketingsList.length);
-      toast.success('Sincronização concluída!');
+      toast.success("Sincronização concluída!");
     } catch (error) {
       console.error("Erro ao sincronizar clientes:", error);
-      toast.error('Erro na sincronização!');
+      toast.error("Erro na sincronização!");
     } finally {
-      setSyncLoading(false); 
+      setSyncLoading(false);
     }
   };
 
   const toggleConcluido = () => {
     setShowConcluidas(!showConcluidas);
   };
+
+  const formatCPF = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{3})(\d)/, "$1.$2")
+      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4")
+      .substring(0, 14);
+  };
+
+  // Função para formatar o CNPJ (visual)
+  const formatCNPJ = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "$1.$2")
+      .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4")
+      .replace(/(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5")
+      .substring(0, 18);
+  };
   return (
     <div className="list-dashboard">
       {modalExcel && (
-        <ModalExcel onClose={closeModalExcel} onApplyFilters={handleApplyFilters} />
+        <ModalExcel
+          onClose={closeModalExcel}
+          onApplyFilters={handleApplyFilters}
+        />
       )}
 
       <div className="header-list">
@@ -212,28 +276,74 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
             />
           </div>
           <div className="selects-container">
-            <Link to='/add' className="create-btn">
+            <Link
+              to="/add"
+              className="create-btn"
+              data-tooltip-id="tooltip-add"
+              data-tooltip-content="Adicionar nova venda"
+            >
               <FontAwesomeIcon icon={faPlus} />
             </Link>
-            <button className="filtros-btn" onClick={openModalExcel}>
+
+            <button
+              className="filtros-btn"
+              onClick={openModalExcel}
+              data-tooltip-id="tooltip-filter"
+              data-tooltip-content="Aplicar filtros"
+            >
               <FontAwesomeIcon icon={faFilter} color="#fff" />
             </button>
+
             {showConcluidas ? (
-              <button className="remove-btn" onClick={toggleConcluido}>
-                <FontAwesomeIcon icon={faX} color="#fff" className="" />
+              <button
+                className="remove-btn"
+                onClick={toggleConcluido}
+                data-tooltip-id="tooltip-close"
+                data-tooltip-content="Fechar concluídas"
+              >
+                <FontAwesomeIcon icon={faX} color="#fff" />
               </button>
             ) : (
-              <button className="clear-btn" onClick={toggleConcluido}>
+              <button
+                className="clear-btn"
+                onClick={toggleConcluido}
+                data-tooltip-id="tooltip-view-all"
+                data-tooltip-content="Ver todas"
+              >
                 <FontAwesomeIcon icon={faBars} color="#fff" />
               </button>
             )}
-            <button className="remove-btn" onClick={handleSyncClients} disabled={syncLoading}>
-              {syncLoading ? (
-                <FontAwesomeIcon icon={faSync} spin color="#fff" />
-              ) : (
-                <FontAwesomeIcon icon={faSync} color="#fff" />
-              )}
-              </button>
+
+            <button
+              className="remove-btn"
+              onClick={handleSyncClients}
+              disabled={syncLoading}
+              data-tooltip-id="tooltip-sync"
+              data-tooltip-content={
+                syncLoading ? "Sincronizando..." : "Sincronizar clientes"
+              }
+            >
+              <FontAwesomeIcon icon={faSync} color="#fff" spin={syncLoading} />
+            </button>
+
+            {/* Tooltips */}
+            <Tooltip id="tooltip-add" place="top" className="custom-tooltip" />
+            <Tooltip
+              id="tooltip-filter"
+              place="top"
+              className="custom-tooltip"
+            />
+            <Tooltip
+              id="tooltip-close"
+              place="top"
+              className="custom-tooltip"
+            />
+            <Tooltip
+              id="tooltip-view-all"
+              place="top"
+              className="custom-tooltip"
+            />
+            <Tooltip id="tooltip-sync" place="top" className="custom-tooltip" />
           </div>
         </div>
       </div>
@@ -261,49 +371,93 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalMarketings
                 <tr key={marketing.id}>
                   <td></td>
                   <td
-                    className={`${selectedItems.has(marketing.id) ? "selected" : ""} ${marketing.servicosConcluidos ? "servicos-realizados" : ""}`}
+                    className={
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    }
                   >
-                    {marketing.cnpj || marketing.cpf}
+                    {marketing.cnpj
+                      ? formatCNPJ(marketing.cnpj)
+                      : marketing.cpf
+                      ? formatCPF(marketing.cpf)
+                      : marketing.cnpj || marketing.cpf}
                   </td>
                   <td
-                    className={`${selectedItems.has(marketing.id) ? "selected" : ""} ${marketing.servicosConcluidos ? "servicos-realizados" : ""}`}
+                    className={`${
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    } ${
+                      marketing.servicosConcluidos ? "servicos-realizados" : ""
+                    }`}
                   >
                     {marketing.responsavel}
                   </td>
                   <td
-                    className={`${selectedItems.has(marketing.id) ? "selected" : ""} ${marketing.servicosConcluidos ? "servicos-realizados" : ""}`}
+                    className={`${
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    } ${
+                      marketing.servicosConcluidos ? "servicos-realizados" : ""
+                    }`}
                   >
                     {marketing.email1 || marketing.email2}
                   </td>
                   <td
-                    className={`${selectedItems.has(marketing.id) ? "selected" : ""} ${marketing.servicosConcluidos ? "servicos-realizados" : ""}`}
+                    className={`${
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    } ${
+                      marketing.servicosConcluidos ? "servicos-realizados" : ""
+                    }`}
                   >
                     {marketing.operador.replace(/\./g, " ")}
                   </td>
                   <td
-                    className={`${selectedItems.has(marketing.id) ? "selected" : ""} ${marketing.servicosConcluidos ? "servicos-realizados" : ""}`}
+                    className={`${
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    } ${
+                      marketing.servicosConcluidos ? "servicos-realizados" : ""
+                    }`}
                   >
                     {marketing.nomeMonitor}
                   </td>
                   <td className="icon-container">
-                    <Link to={`/contrato/${marketing.id}`}>
-                      <FontAwesomeIcon icon={faEye} className="icon-spacing text-dark" />
-                    </Link>
-                    <Link to={`/fichamarketing/${marketing.id}`}>
-                      <FontAwesomeIcon icon={faTableList} className="icon-spacing text-dark" />
-                    </Link>
-                  </td>
+  <Link
+    to={`/contrato/${marketing.id}`}
+    data-tooltip-id="tooltip-view-contract"
+    data-tooltip-content="Visualizar contrato"
+  >
+    <FontAwesomeIcon icon={faEye} className="icon-spacing text-dark" />
+  </Link>
+
+  <Link
+    to={`/fichamarketing/${marketing.id}`}
+    data-tooltip-id="tooltip-marketing-file"
+    data-tooltip-content="Ficha de marketing"
+  >
+    <FontAwesomeIcon icon={faTableList} className="icon-spacing text-dark" />
+  </Link>
+
+  {/* Tooltips */}
+  <Tooltip id="tooltip-view-contract" place="top" className="custom-tooltip" />
+  <Tooltip id="tooltip-marketing-file" place="top" className="custom-tooltip" />
+</td>
+
                 </tr>
               ))}
             </tbody>
           </table>
 
           <div className="pagination">
-            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
               <FontAwesomeIcon icon={faArrowLeft} />
             </button>
-            <span>Página {currentPage} de {totalPages}</span>
-            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+            <span>
+              Página {currentPage} de {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
               <FontAwesomeIcon icon={faArrowRight} />
             </button>
             <ToastContainer />

@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
 import { db } from "../../../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
+import { Tooltip } from "react-tooltip";
 
 interface Venda {
   id: string;
@@ -38,7 +39,7 @@ interface ListDashboardProps {
 
 export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, setTotalRealizados }) => {
   const [vendas, setVendas] = useState<Venda[]>([]);
-  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [selectedItems] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [modalExcel, setModalExcel] = useState(false);
   const itemsPerPage = 5;
@@ -82,17 +83,17 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
     fetchvendas();
   }, [setTotalVendas, setTotalRealizados]);
 
-  const handleCheckboxChange = (id: string) => {
-    setSelectedItems((prevSelectedItems) => {
-      const newSelectedItems = new Set(prevSelectedItems);
-      if (newSelectedItems.has(id)) {
-        newSelectedItems.delete(id);
-      } else {
-        newSelectedItems.add(id);
-      }
-      return newSelectedItems;
-    });
-  };
+  // const handleCheckboxChange = (id: string) => {
+  //   setSelectedItems((prevSelectedItems) => {
+  //     const newSelectedItems = new Set(prevSelectedItems);
+  //     if (newSelectedItems.has(id)) {
+  //       newSelectedItems.delete(id);
+  //     } else {
+  //       newSelectedItems.add(id);
+  //     }
+  //     return newSelectedItems;
+  //   });
+  // };
 
   const applyFilters = () => {
     let filteredClients = vendas.filter((venda) => {
@@ -155,6 +156,27 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
     setShowConcluidas(!showConcluidas);
   };
 
+  const formatCPF = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{3})(\d)/, "$1.$2")
+      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4")
+      .substring(0, 14);
+  };
+
+  // Função para formatar o CNPJ (visual)
+  const formatCNPJ = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "$1.$2")
+      .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4")
+      .replace(/(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5")
+      .substring(0, 18);
+  };
+
+
   return (
     <div className="list-dashboard">
       {modalExcel && (
@@ -175,20 +197,26 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
             />
           </div>
           <div className="selects-container">
-            <button className="filtros-btn" onClick={openModalExcel}>
-              <FontAwesomeIcon icon={faFilter} color="#fff" />
-            </button>
+  <button className="filtros-btn" onClick={openModalExcel}>
+    <FontAwesomeIcon icon={faFilter} color="#fff" data-tooltip-id="tooltip-filter" data-tooltip-content="Aplicar filtros" />
+  </button>
 
-            {showConcluidas ? (
-              <button className="remove-btn" onClick={toggleConcluido}>
-                <FontAwesomeIcon icon={faX} color="#fff" className="" />
-              </button>
-            ) : (
-              <button className="concluido-btn" onClick={toggleConcluido}>
-                <FontAwesomeIcon icon={faBars} color="#fff" />
-              </button>
-            )}
-          </div>
+  {showConcluidas ? (
+    <button className="remove-btn" onClick={toggleConcluido}>
+      <FontAwesomeIcon icon={faX} color="#fff" data-tooltip-id="tooltip-remove" data-tooltip-content="Remover concluídas" />
+    </button>
+  ) : (
+    <button className="concluido-btn" onClick={toggleConcluido}>
+      <FontAwesomeIcon icon={faBars} color="#fff" data-tooltip-id="tooltip-show" data-tooltip-content="Mostrar concluídas" />
+    </button>
+  )}
+
+  {/* Tooltips */}
+  <Tooltip id="tooltip-filter" place="top" className="custom-tooltip" />
+  <Tooltip id="tooltip-remove" place="top" className="custom-tooltip" />
+  <Tooltip id="tooltip-show" place="top" className="custom-tooltip" />
+</div>
+
         </div>
       </div>
 
@@ -202,7 +230,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
             <thead>
               <tr>
                 <th></th>
-                <th>CNPJ</th>
+                <th>CNPJ/CPF</th>
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Operador</th>
@@ -214,9 +242,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
               {currentClients.map((venda: Venda) => (
                 <tr key={venda.id}>
                   <td></td>
-                  <td className={`${selectedItems.has(venda.id) ? "selected" : ""} ${venda.monitoriaConcluidaYes ? "concluida" : ""}`}>
-                    {venda.cnpj || venda.cpf}
-                  </td>
+                  <td className={selectedItems.has(venda.id) ? "selected" : ""}>
+  {venda.cnpj ? formatCNPJ(venda.cnpj) : venda.cpf ? formatCPF(venda.cpf) : venda.cnpj || venda.cpf}
+</td>
                   <td className={`${selectedItems.has(venda.id) ? "selected" : ""} ${venda.monitoriaConcluidaYes ? "concluida" : ""}`}>
                     {venda.responsavel}
                   </td>
@@ -229,17 +257,38 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
                   <td className={`${selectedItems.has(venda.id) ? "selected" : ""} ${venda.monitoriaConcluidaYes ? "concluida" : ""}`}>
                     {venda.nomeMonitor}
                   </td>
-                  <td className="icon-container" >
-                  <Link to={`/contrato/${venda.id}`}>
-                      <FontAwesomeIcon icon={faEye} className="icon-spacing text-dark" />
-                    </Link>
-                    <Link to={`/editcontrato/${venda.id}`}>
-                      <FontAwesomeIcon icon={faEdit} className="icon-spacing text-dark" />
-                    </Link>
-                    <Link to={`/fichamonitoria/${venda.id}`}>
-                      <FontAwesomeIcon icon={faRectangleList} className="icon-spacing text-dark" />
-                    </Link>
-                  </td>
+                  <td className="icon-container">
+  <Link to={`/contrato/${venda.id}`}>
+    <FontAwesomeIcon
+      icon={faEye}
+      className="icon-spacing text-dark"
+      data-tooltip-id="tooltip-view"
+      data-tooltip-content="Visualizar contrato"
+    />
+  </Link>
+  <Link to={`/editcontrato/${venda.id}`}>
+    <FontAwesomeIcon
+      icon={faEdit}
+      className="icon-spacing text-dark"
+      data-tooltip-id="tooltip-edit"
+      data-tooltip-content="Editar contrato"
+    />
+  </Link>
+  <Link to={`/fichamonitoria/${venda.id}`}>
+    <FontAwesomeIcon
+      icon={faRectangleList}
+      className="icon-spacing text-dark"
+      data-tooltip-id="tooltip-monitor"
+      data-tooltip-content="Ficha de monitoria"
+    />
+  </Link>
+
+  {/* Tooltips */}
+  <Tooltip id="tooltip-view" place="top" className="custom-tooltip" />
+  <Tooltip id="tooltip-edit" place="top" className="custom-tooltip" />
+  <Tooltip id="tooltip-monitor" place="top" className="custom-tooltip" />
+</td>
+
                 </tr>
               ))}
             </tbody>

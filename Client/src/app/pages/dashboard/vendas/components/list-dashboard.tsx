@@ -26,6 +26,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import * as XLSX from "xlsx";
+import { Tooltip } from "react-tooltip";
 
 interface Venda {
   id: string;
@@ -249,6 +250,26 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
     XLSX.writeFile(wb, "planilha_vendas.xlsx");
   };
 
+  const formatCPF = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{3})(\d)/, "$1.$2")
+      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4")
+      .substring(0, 14);
+  };
+
+  // Função para formatar o CNPJ (visual)
+  const formatCNPJ = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "$1.$2")
+      .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4")
+      .replace(/(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5")
+      .substring(0, 18);
+  };
+
   return (
     <div className="list-dashboard">
       {modalExcel && (
@@ -261,8 +282,13 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       <div className="header-list">
         <div className="header-content">
           <h2>Vendas</h2>
+
           <div className="search-container">
-            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+            <FontAwesomeIcon
+              icon={faSearch}
+              className="search-icon"
+              data-tip="Pesquisar"
+            />
             <input
               type="text"
               placeholder="Pesquisar..."
@@ -271,23 +297,51 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+
           <div className="selects-container">
-            <Link to="/add" className="create-btn">
-              <FontAwesomeIcon icon={faPlus} />
+            <Link to="/add" className="create-btn"  data-tooltip-id="add-tooltip"
+                data-tooltip-content="Nova venda">
+              <FontAwesomeIcon
+                icon={faPlus}
+               
+              />
+              <Tooltip id="add-tooltip" place="top" className="custom-tooltip" />
             </Link>
+
             {adminUserId && (
-              <button onClick={handleRemoveSelected} className="remove-btn">
-                <FontAwesomeIcon icon={faTrashAlt} />
+              <button onClick={handleRemoveSelected} className="remove-btn"  data-tooltip-id="remove-tooltip"
+              data-tooltip-content="Remover selecionados">
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                 
+                />
+                <Tooltip id="remove-tooltip" place="top" className="custom-tooltip" />
               </button>
             )}
-            <button className="filtros-btn" onClick={openModalExcel}>
-              <FontAwesomeIcon icon={faFilter} color="#fff" />
+
+            <button className="filtros-btn" onClick={openModalExcel} data-tooltip-id="filter-tooltip"
+                data-tooltip-content="Aplicar filtros">
+              <FontAwesomeIcon
+                icon={faFilter}
+                color="#fff"
+                
+              />
+              <Tooltip id="filter-tooltip" place="top" className="custom-tooltip" />
             </button>
-            <button className="planilha-btn" onClick={downloadClients}>
+
+            <button
+              className="planilha-btn"
+              onClick={downloadClients}
+              data-tooltip-id="download-tooltip"
+              data-tooltip-content="Baixar planilha"
+            >
               <FontAwesomeIcon icon={faDownload} color="#fff" />
+              <Tooltip id="download-tooltip" place="top" className="custom-tooltip" />
             </button>
           </div>
         </div>
+
+        <Tooltip id="my-tooltip" />
       </div>
 
       {loading ? (
@@ -300,7 +354,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
             <thead>
               <tr>
                 <th></th>
-                <th>CNPJ</th>
+                <th>CNPJ/CPF</th>
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Operador</th>
@@ -319,7 +373,11 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                     />
                   </td>
                   <td className={selectedItems.has(venda.id) ? "selected" : ""}>
-                    {venda.cnpj || venda.cpf}
+                    {venda.cnpj
+                      ? formatCNPJ(venda.cnpj)
+                      : venda.cpf
+                      ? formatCPF(venda.cpf)
+                      : venda.cnpj || venda.cpf}
                   </td>
                   <td className={selectedItems.has(venda.id) ? "selected" : ""}>
                     {venda.responsavel}
@@ -331,32 +389,48 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                     {venda.operador.replace(/\./g, " ")}
                   </td>
 
-                  <td className={"icon-container"}>
-                    <Link to={`/editcontrato/${venda.id}`}>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        className="icon-spacing text-dark"
-                      />
-                    </Link>
-                    <Link to={`/comprovantes/${venda.id}`}>
-                      <FontAwesomeIcon
-                        icon={faFile}
-                        className="icon-spacing text-dark"
-                      />
-                    </Link>
-                    <Link to={`/contrato/${venda.id}`}>
-                      <FontAwesomeIcon
-                        icon={faEye}
-                        className="icon-spacing text-dark"
-                      />
-                    </Link>
-                    <Link to={`/fichaboleto/${venda.id}`}>
-                      <FontAwesomeIcon
-                        icon={faMoneyCheckDollar}
-                        className="icon-spacing text-dark"
-                      />
-                    </Link>
-                  </td>
+                  <td className="icon-container">
+  <Link to={`/editcontrato/${venda.id}`}>
+    <FontAwesomeIcon
+      icon={faEdit}
+      className="icon-spacing text-dark"
+      data-tooltip-id="tooltip-edit"
+      data-tooltip-content="Editar contrato"
+    />
+    <Tooltip id="tooltip-edit" place="top" className="custom-tooltip" />
+  </Link>
+
+  <Link to={`/comprovantes/${venda.id}`}>
+    <FontAwesomeIcon
+      icon={faFile}
+      className="icon-spacing text-dark"
+      data-tooltip-id="tooltip-comprovantes"
+      data-tooltip-content="Ver comprovantes"
+    />
+    <Tooltip id="tooltip-comprovantes" place="top" className="custom-tooltip" />
+  </Link>
+
+  <Link to={`/contrato/${venda.id}`}>
+    <FontAwesomeIcon
+      icon={faEye}
+      className="icon-spacing text-dark"
+      data-tooltip-id="tooltip-contrato"
+      data-tooltip-content="Visualizar contrato"
+    />
+    <Tooltip id="tooltip-contrato" place="top" className="custom-tooltip" />
+  </Link>
+
+  <Link to={`/fichaboleto/${venda.id}`}>
+    <FontAwesomeIcon
+      icon={faMoneyCheckDollar}
+      className="icon-spacing text-dark"
+      data-tooltip-id="tooltip-boleto"
+      data-tooltip-content="Ver ficha de boleto"
+    />
+    <Tooltip id="tooltip-boleto" place="top" className="custom-tooltip" />
+  </Link>
+</td>
+
                 </tr>
               ))}
             </tbody>

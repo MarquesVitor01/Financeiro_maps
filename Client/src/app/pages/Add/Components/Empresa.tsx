@@ -1,6 +1,6 @@
-import { faSync } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import { faSync } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
 
 interface DadosEmpresaProps {
   form: {
@@ -33,52 +33,58 @@ interface DadosEmpresaProps {
     opcao3: boolean;
     opcao4: boolean;
   };
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+  handleInputChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => void;
   tipoDocumento: string;
-  // handleToggleDocumento: () => void;
-  // isRotated: boolean;
 }
 
 export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
   form,
   handleInputChange,
-  // tipoDocumento,
-  // handleToggleDocumento,
-  // isRotated,
 }) => {
-  // const [formattedDocument, setFormattedDocument] = useState<string>(tipoDocumento === "CPF" ? form.cpf : form.cnpj);
 
-  // const formatCNPJ = (value: string) => {
-  //   return value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1/$2').replace(/(\d{4})(\d{1,2})$/, '$1-$2');
-  // };
+  // Função para formatar o CPF (visual)
+  const formatCPF = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{3})(\d)/, "$1.$2")
+      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4")
+      .substring(0, 14);
+  };
 
-  // const formatCPF = (value: string) => {
-  //   return value.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-  // };
+  // Função para formatar o CNPJ (visual)
+  const formatCNPJ = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "$1.$2")
+      .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4")
+      .replace(/(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5")
+      .substring(0, 18);
+  };
 
-  // const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { value } = e.target;
+  const handleDocumentChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const { value, name } = e.target;
+    let formattedValue = value;
 
-  //   const maxLength = tipoDocumento === "CPF" ? 14 : 18;
-
-  //   const trimmedValue = value.slice(0, maxLength);
-
-  //   const formattedValue = tipoDocumento === "CPF" ? formatCPF(trimmedValue) : formatCNPJ(trimmedValue);
-
-  //   setFormattedDocument(formattedValue);
-
-  //   if (tipoDocumento === "CPF") {
-  //     if (form.cnpj && form.cnpj.replace(/\D/g, '') !== "") {
-  //       handleInputChange({ target: { name: "cnpj", value: "" } } as React.ChangeEvent<HTMLInputElement>);
-  //     }
-  //   } else {
-  //     if (form.cpf && form.cpf.replace(/\D/g, '') !== "") {
-  //       handleInputChange({ target: { name: "cpf", value: "" } } as React.ChangeEvent<HTMLInputElement>);
-  //     }
-  //   }
-
-  //   handleInputChange({ target: { name: tipoDocumento === "CPF" ? "cpf" : "cnpj", value: formattedValue } } as React.ChangeEvent<HTMLInputElement>);
-  // };
+    if (name === "cpf") {
+      formattedValue = formatCPF(value);
+      handleInputChange({
+        target: { name, value: value.replace(/\D/g, "") },
+      } as React.ChangeEvent<HTMLInputElement>);
+    } else if (name === "cnpj") {
+      formattedValue = formatCNPJ(value);
+      handleInputChange({
+        target: { name, value: value.replace(/\D/g, "") },
+      } as React.ChangeEvent<HTMLInputElement>);
+    }
+  };
 
 
   return (
@@ -97,31 +103,6 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
           placeholder="Insira a razão social"
         />
       </div>
-
-      {/* <div className="form-group mb-3 col-md-4">
-        <label htmlFor="documento">{tipoDocumento}</label>
-        <div className="input-group">
-          <input
-            type="text"
-            className="form-control"
-            id="documento"
-            name={tipoDocumento === "CPF" ? "cpf" : "cnpj"}
-            value={formattedDocument}
-            onChange={handleDocumentChange}
-            placeholder={`Insira o ${tipoDocumento}`}
-          />
-          <button
-            type="button"
-            className="btn btn-outline-secondary bg-white"
-            onClick={handleToggleDocumento}
-          >
-            <FontAwesomeIcon
-              icon={faSync}
-              className={`icon-troca ${isRotated ? 'rotated' : ''} text-dark`}
-            />
-          </button>
-        </div>
-      </div> */}
       <div className="form-group mb-3 col-md-4">
         <label htmlFor="nomeFantasia">CNPJ</label>
         <input
@@ -129,8 +110,8 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
           className="form-control"
           id="cnpj"
           name="cnpj"
-          value={form.cnpj}
-          onChange={handleInputChange}
+          value={form.cnpj ? formatCNPJ(form.cnpj) : ""}
+          onChange={handleDocumentChange}
           placeholder="Insira o cnpj"
         />
       </div>
@@ -141,8 +122,8 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
           className="form-control"
           id="cpf"
           name="cpf"
-          value={form.cpf}
-          onChange={handleInputChange}
+          value={form.cpf ? formatCPF(form.cpf) : ""}
+          onChange={handleDocumentChange}
           placeholder="Insira o cpf"
         />
       </div>

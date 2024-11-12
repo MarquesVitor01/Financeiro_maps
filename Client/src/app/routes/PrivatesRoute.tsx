@@ -11,7 +11,7 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ element, requiredCargo }) => {
   const { user, loading, cargo } = useAuth();
-  const adminId = "9CfoYP8HtPg7nymfGzrn8GE2NOR2";
+  const adminId = "mJT4AdiNCuURJsbibAPcNeMid1I3";
   const [modalOpen, setModalOpen] = useState(false); // Estado para controlar o modal
   const [redirect, setRedirect] = useState(false); // Estado para controle de redirecionamento
 

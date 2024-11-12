@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import '../setores/components/Setores.css';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,7 +13,7 @@ export const Setores = () => {
     };
 
     const { cargo, userId } = useAuth(); 
-    const adminId = "9CfoYP8HtPg7nymfGzrn8GE2NOR2";
+    const adminId = "mJT4AdiNCuURJsbibAPcNeMid1I3";
 
     return (
         <div className="sector-selection container-fluid">

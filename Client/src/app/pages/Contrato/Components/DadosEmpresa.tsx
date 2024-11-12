@@ -7,6 +7,25 @@ export const DadosEmpresa: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [clientData, setClientData] = useState<any>(null);
 
+  const formatCNPJ = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "$1.$2")
+      .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4")
+      .replace(/(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5")
+      .substring(0, 18);
+  };
+  
+  const formatCPF = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{3})(\d)/, "$1.$2")
+      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4")
+      .substring(0, 14);
+  };
+
   useEffect(() => {
     const fetchClientData = async () => {
       try {
@@ -48,8 +67,9 @@ export const DadosEmpresa: React.FC = () => {
                 <strong>ESTADO:</strong> {clientData.estado}
               </p>
               <p>
-                <strong>CNPJ/CPF:</strong> {clientData.cnpj || clientData.cpf}
-              </p>
+      <strong>CNPJ/CPF:</strong>{" "}
+      {clientData.cnpj ? formatCNPJ(clientData.cnpj) : clientData.cpf ? formatCPF(clientData.cpf) : ""}
+    </p>
               <p>
                 <strong>ENDEREÇO COMERCIAL:</strong> {clientData.enderecoComercial}
               </p>
