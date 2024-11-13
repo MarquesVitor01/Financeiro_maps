@@ -108,62 +108,62 @@ export const Add = () => {
     window.history.back();
   };
 
-  const [boletoData, setBoletoData] = useState<BoletoData | null>(null);
+  // const [boletoData, setBoletoData] = useState<BoletoData | null>(null);
 
-  const generateBoleto = async () => {
-    try {
-      const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzEzMjk5NDIsImV4cCI6MTczMTMzMDU0MiwiZGF0YSI6eyJrZXlfaWQiOjIwNjM0NzgsInR5cGUiOiJhY2Nlc3NUb2tlbiIsImlkIjoiNjE0OGI4MzItYzhiNy00NGU0LWJjY2YtYjVlMDczMWZlZmMyKzE5ZWIwZTYxLTNmYjUtNDdkMS1hZWM3LTZmZjUyZDM4YTY0ZSJ9fQ.xyQ9ulIdxcvOcXGJ-vPcV5o782Nc3YpSNU0HLb5_ZTo";
-      const response = await fetch("http://localhost:5000/generate-boleto", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          name: form.responsavel,
-          email: form.email1,
-          cpf: form.cpf,
-          birth: "1977-01-15",
-          phone_number: form.celular,
-          items: [
-            {
-              name: form.validade,
-              value: Number(form.valorVenda),
-              amount: 1,
-            },
-          ],
-          shippingValue: 100,
-        }),
-      });
+  // const generateBoleto = async () => {
+  //   try {
+  //     const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzEzMjk5NDIsImV4cCI6MTczMTMzMDU0MiwiZGF0YSI6eyJrZXlfaWQiOjIwNjM0NzgsInR5cGUiOiJhY2Nlc3NUb2tlbiIsImlkIjoiNjE0OGI4MzItYzhiNy00NGU0LWJjY2YtYjVlMDczMWZlZmMyKzE5ZWIwZTYxLTNmYjUtNDdkMS1hZWM3LTZmZjUyZDM4YTY0ZSJ9fQ.xyQ9ulIdxcvOcXGJ-vPcV5o782Nc3YpSNU0HLb5_ZTo";
+  //     const response = await fetch("http://localhost:5000/generate-boleto", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //       body: JSON.stringify({
+  //         name: form.responsavel,
+  //         email: form.email1,
+  //         cpf: form.cpf,
+  //         birth: "1977-01-15",
+  //         phone_number: form.celular,
+  //         items: [
+  //           {
+  //             name: form.validade,
+  //             value: Number(form.valorVenda),
+  //             amount: 1,
+  //           },
+  //         ],
+  //         shippingValue: 100,
+  //       }),
+  //     });
 
-      if (!response.ok) {
-        throw new Error(`Erro na API: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`Erro na API: ${response.status}`);
+  //     }
 
-      const data = await response.json();
-      setBoletoData({
-        pdfLink: data.pdfLink,
-        billetLink: data.billetLink,
-        barcode: data.barcode,
-      });
-      return data;
-    } catch (error) {
-      console.error("Erro ao gerar boleto:", error);
-      toast.error("Erro ao gerar o boleto.");
-      return null;
-    }
-  };
+  //     const data = await response.json();
+  //     setBoletoData({
+  //       pdfLink: data.pdfLink,
+  //       billetLink: data.billetLink,
+  //       barcode: data.barcode,
+  //     });
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Erro ao gerar boleto:", error);
+  //     toast.error("Erro ao gerar o boleto.");
+  //     return null;
+  //   }
+  // };
 
-  const saveBoletoData = async (boletoData: BoletoData) => {
-    try {
-      const clienteRef = doc(db, "vendas", form.numeroContrato);
-      await updateDoc(clienteRef, { boleto: boletoData });
-      toast.success("Boleto salvo com sucesso!");
-    } catch (error) {
-      console.error("Erro ao salvar boleto no Firebase:", error);
-      toast.error("Erro ao salvar boleto.");
-    }
-  };
+  // const saveBoletoData = async (boletoData: BoletoData) => {
+  //   try {
+  //     const clienteRef = doc(db, "vendas", form.numeroContrato);
+  //     await updateDoc(clienteRef, { boleto: boletoData });
+  //     toast.success("Boleto salvo com sucesso!");
+  //   } catch (error) {
+  //     console.error("Erro ao salvar boleto no Firebase:", error);
+  //     toast.error("Erro ao salvar boleto.");
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -183,18 +183,18 @@ export const Add = () => {
       });
 
       toast.success("Cliente salvo com sucesso!");
-      const boletoResponse = await generateBoleto();
-      if (boletoResponse) {
-        await saveBoletoData(boletoResponse);
-      }
-      console.log(boletoResponse);
-      console.log(boletoData);
+      // const boletoResponse = await generateBoleto();
+      // if (boletoResponse) {
+      //   await saveBoletoData(boletoResponse);
+      // }
+      // console.log(boletoResponse);
+      // console.log(boletoData);
       
 
       setRedirect(true);
     } catch (error) {
       console.error("Erro ao salvar cliente:", error);
-      toast.error("Erro ao salvar cliente ou gerar boleto.");
+      // toast.error("Erro ao salvar cliente ou gerar boleto.");
     } finally {
       setLoading(false);
     }
