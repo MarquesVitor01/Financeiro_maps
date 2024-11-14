@@ -45,7 +45,7 @@ admin.initializeApp({
 const app = express();
 const port = process.env.PORT || 5000;
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin:"https://grupomapscartaodigital.com.br",
 }));
 app.use(express.json());
 
