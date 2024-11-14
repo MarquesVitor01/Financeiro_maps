@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { db } from "../../../firebaseConfig";
 import { QRCodeSVG } from 'qrcode.react';
 
-type Option = "criacao" | "anuncio" | "cartaoDigital" | "logotipo";
 
 export const Bonus: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,12 +37,7 @@ export const Bonus: React.FC = () => {
     logotipo: true,
   });
 
-  const toggleOption = (option: Option) => {
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [option]: !prev[option],
-    }));
-  };
+
 
   // Função para formatar a data no formato brasileiro
   const formatDateToBrazilian = (dateString: string) => {
@@ -55,56 +49,61 @@ export const Bonus: React.FC = () => {
     return `${day}/${month}/${year}`;
   };
 
+
+
   return (
     clientData && (
       <div className="bonus card text-center mt-2">
         <h5 className="text-white ">BÔNUS</h5>
         <div className="d-flex justify-content-center my-1">
-          <div className="mx-2" onClick={() => toggleOption("criacao")}>
-            <strong
-              style={{
-                textDecoration: selectedOptions.criacao ? "none" : "line-through",
-                color: selectedOptions.criacao ? "black" : "red",
-                cursor: "pointer",
-              }}
-            >
-              Criação
-            </strong>
-          </div>
-          <div className="mx-2" onClick={() => toggleOption("anuncio")}>
-            <strong
-              style={{
-                textDecoration: selectedOptions.anuncio ? "none" : "line-through",
-                color: selectedOptions.anuncio ? "black" : "red",
-                cursor: "pointer",
-              }}
-            >
-              Anúncio
-            </strong>
-          </div>
-          <div className="mx-2" onClick={() => toggleOption("cartaoDigital")}>
-            <strong
-              style={{
-                textDecoration: selectedOptions.cartaoDigital ? "none" : "line-through",
-                color: selectedOptions.cartaoDigital ? "black" : "red",
-                cursor: "pointer",
-              }}
-            >
-              Cartão Digital
-            </strong>
-          </div>
-          <div className="mx-2" onClick={() => toggleOption("logotipo")}>
-            <strong
-              style={{
-                textDecoration: selectedOptions.logotipo ? "none" : "line-through",
-                color: selectedOptions.logotipo ? "black" : "red",
-                cursor: "pointer",
-              }}
-            >
-              Logotipo
-            </strong>
-          </div>
+          {
+            clientData.criacao &&
+            <div className="mx-2">
+              <strong
+                style={{
+                  color: "red",
+                }}
+              >
+                Criação
+              </strong>
+            </div>
+          }
+          {
+            clientData.anuncio &&
+            <div className="mx-2" >
+              <strong
+                style={{
+                  color: "red",
+                }}
+              >
+                Anúncio
+              </strong>
+            </div>
+          }
+          {
+            clientData.ctdigital && <div className="mx-2" >
+              <strong
+                style={{
+                  color: "red",
+                }}
+              >
+                Cartão Digital
+              </strong>
+            </div>
+          }
+          { clientData.logotipo &&
+            <div className="mx-2" >
+              <strong
+                style={{
+                  color: "red",
+                }}
+              >
+                Logotipo
+              </strong>
+            </div>
+          }
         </div>
+
 
         <div className="form-group">
           <p>
@@ -130,7 +129,7 @@ export const Bonus: React.FC = () => {
         </div>
 
         <h5 className="mt-2">CENTRAL DE ATENDIMENTO</h5>
-        <p>(11) 3939-2301 / 0800 580 2766 / (11) 3195-8710</p>
+        <p>0800 050 0069 / 0800 580 2766 / (11) 3195-8710</p>
         <p>
           <a href="mailto:MARKETING@GRUPOMAPSEMPRESAS.com.br">
             MARKETING@GRUPOMAPSEMPRESAS.com.br
@@ -140,7 +139,7 @@ export const Bonus: React.FC = () => {
             CONTATO@GRUPOMAPSEMPRESAS.com.br
           </a>
         </p>
-        <p>PARA ATENDIMENTO VIA WHATSAPP BASTA CLICAR NO ÍCONE ABAIXO:</p>
+        {/* <p>PARA ATENDIMENTO VIA WHATSAPP BASTA CLICAR NO ÍCONE ABAIXO:</p>
         <a
           href="https://wa.link/ulgll4"
           target="_blank"
@@ -151,7 +150,7 @@ export const Bonus: React.FC = () => {
             alt="WhatsApp"
             style={{ width: "170px" }}
           />
-        </a>
+        </a> */}
       </div>
     )
   );

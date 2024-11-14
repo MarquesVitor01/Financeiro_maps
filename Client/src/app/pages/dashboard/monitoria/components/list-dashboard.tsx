@@ -69,9 +69,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
 
         setVendas(vendasList);
         setTotalVendas(vendasList.length);
-        
+
         const totalRealizados = vendasList.filter(venda => venda.monitoriaConcluidaYes).length;
-        setTotalRealizados(totalRealizados); 
+        setTotalRealizados(totalRealizados);
 
       } catch (error) {
         console.error("Erro ao buscar vendas:", error);
@@ -165,7 +165,6 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
       .substring(0, 14);
   };
 
-  // Função para formatar o CNPJ (visual)
   const formatCNPJ = (value: string): string => {
     return value
       .replace(/\D/g, "")
@@ -197,25 +196,25 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
             />
           </div>
           <div className="selects-container">
-  <button className="filtros-btn" onClick={openModalExcel}>
-    <FontAwesomeIcon icon={faFilter} color="#fff" data-tooltip-id="tooltip-filter" data-tooltip-content="Aplicar filtros" />
-  </button>
+            <button className="filtros-btn" onClick={openModalExcel}>
+              <FontAwesomeIcon icon={faFilter} color="#fff" data-tooltip-id="tooltip-filter" data-tooltip-content="Aplicar filtros" />
+            </button>
 
-  {showConcluidas ? (
-    <button className="remove-btn" onClick={toggleConcluido}>
-      <FontAwesomeIcon icon={faX} color="#fff" data-tooltip-id="tooltip-remove" data-tooltip-content="Remover concluídas" />
-    </button>
-  ) : (
-    <button className="concluido-btn" onClick={toggleConcluido}>
-      <FontAwesomeIcon icon={faBars} color="#fff" data-tooltip-id="tooltip-show" data-tooltip-content="Mostrar concluídas" />
-    </button>
-  )}
+            {showConcluidas ? (
+              <button className="remove-btn" onClick={toggleConcluido}>
+                <FontAwesomeIcon icon={faX} color="#fff" data-tooltip-id="tooltip-remove" data-tooltip-content="Remover concluídas" />
+              </button>
+            ) : (
+              <button className="concluido-btn" onClick={toggleConcluido}>
+                <FontAwesomeIcon icon={faBars} color="#fff" data-tooltip-id="tooltip-show" data-tooltip-content="Mostrar concluídas" />
+              </button>
+            )}
 
-  {/* Tooltips */}
-  <Tooltip id="tooltip-filter" place="top" className="custom-tooltip" />
-  <Tooltip id="tooltip-remove" place="top" className="custom-tooltip" />
-  <Tooltip id="tooltip-show" place="top" className="custom-tooltip" />
-</div>
+            {/* Tooltips */}
+            <Tooltip id="tooltip-filter" place="top" className="custom-tooltip" />
+            <Tooltip id="tooltip-remove" place="top" className="custom-tooltip" />
+            <Tooltip id="tooltip-show" place="top" className="custom-tooltip" />
+          </div>
 
         </div>
       </div>
@@ -242,9 +241,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
               {currentClients.map((venda: Venda) => (
                 <tr key={venda.id}>
                   <td></td>
-                  <td className={selectedItems.has(venda.id) ? "selected" : ""}>
-  {venda.cnpj ? formatCNPJ(venda.cnpj) : venda.cpf ? formatCPF(venda.cpf) : venda.cnpj || venda.cpf}
-</td>
+                  <td className={`${selectedItems.has(venda.id) ? "selected" : ""}`}>
+                    {venda.cnpj ? formatCNPJ(venda.cnpj) : venda.cpf ? formatCPF(venda.cpf) : venda.cnpj || venda.cpf}
+                  </td>
                   <td className={`${selectedItems.has(venda.id) ? "selected" : ""} ${venda.monitoriaConcluidaYes ? "concluida" : ""}`}>
                     {venda.responsavel}
                   </td>
@@ -258,36 +257,36 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({ setTotalVendas, se
                     {venda.nomeMonitor}
                   </td>
                   <td className="icon-container">
-  <Link to={`/contrato/${venda.id}`}>
-    <FontAwesomeIcon
-      icon={faEye}
-      className="icon-spacing text-dark"
-      data-tooltip-id="tooltip-view"
-      data-tooltip-content="Visualizar contrato"
-    />
-  </Link>
-  <Link to={`/editcontrato/${venda.id}`}>
-    <FontAwesomeIcon
-      icon={faEdit}
-      className="icon-spacing text-dark"
-      data-tooltip-id="tooltip-edit"
-      data-tooltip-content="Editar contrato"
-    />
-  </Link>
-  <Link to={`/fichamonitoria/${venda.id}`}>
-    <FontAwesomeIcon
-      icon={faRectangleList}
-      className="icon-spacing text-dark"
-      data-tooltip-id="tooltip-monitor"
-      data-tooltip-content="Ficha de monitoria"
-    />
-  </Link>
+                    <Link to={`/contrato/${venda.id}`}>
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="icon-spacing text-dark"
+                        data-tooltip-id="tooltip-view"
+                        data-tooltip-content="Visualizar contrato"
+                      />
+                    </Link>
+                    <Link to={`/editcontrato/${venda.id}`}>
+                      <FontAwesomeIcon
+                        icon={faEdit}
+                        className="icon-spacing text-dark"
+                        data-tooltip-id="tooltip-edit"
+                        data-tooltip-content="Editar contrato"
+                      />
+                    </Link>
+                    <Link to={`/fichamonitoria/${venda.id}`}>
+                      <FontAwesomeIcon
+                        icon={faRectangleList}
+                        className="icon-spacing text-dark"
+                        data-tooltip-id="tooltip-monitor"
+                        data-tooltip-content="Ficha de monitoria"
+                      />
+                    </Link>
 
-  {/* Tooltips */}
-  <Tooltip id="tooltip-view" place="top" className="custom-tooltip" />
-  <Tooltip id="tooltip-edit" place="top" className="custom-tooltip" />
-  <Tooltip id="tooltip-monitor" place="top" className="custom-tooltip" />
-</td>
+                    {/* Tooltips */}
+                    <Tooltip id="tooltip-view" place="top" className="custom-tooltip" />
+                    <Tooltip id="tooltip-edit" place="top" className="custom-tooltip" />
+                    <Tooltip id="tooltip-monitor" place="top" className="custom-tooltip" />
+                  </td>
 
                 </tr>
               ))}

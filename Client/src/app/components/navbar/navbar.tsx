@@ -13,7 +13,7 @@ export const Navbar = () => {
   const [script1, setScript1] = useState(false);
   const [script2, setScript2] = useState(false);
   const { nome, avatar, cargo, userId } = useAuth();
-  const adminId = "mJT4AdiNCuURJsbibAPcNeMid1I3";
+  const adminId = "9CfoYP8HtPg7nymfGzrn8GE2NOR2";
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);

@@ -2,15 +2,42 @@
     position: absolute;
     top: 10px;
     left: 20px;
-}
-
-.fichaMarketing{
-    height: 100vh;
-    background: linear-gradient(150deg, #494ba7 50%, #25BFB2 50%); 
-}
-
-.box-boleto{
+  }
+  
+  .fichaBoleto{
+    background: linear-gradient(150deg, #494ba7 50%, #25BFB2 50%);
+    min-height: 100vh;
+    padding: 70px; 
+  }
+  
+  .box-boleto{
     background-color: #fff;
     border-radius: 10px;
     padding: 20px;
-}
+  }
+  
+  .boletos-container{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .boleto-card{
+    flex: 1 1 calc(33.33% - 20px); /* Ajuste para 3 boletos por linha com espaçamento */
+    min-width: 280px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .card a:hover {
+    text-decoration: underline;
+  }
+  

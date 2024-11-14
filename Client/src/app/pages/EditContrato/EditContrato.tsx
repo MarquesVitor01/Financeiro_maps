@@ -41,6 +41,10 @@ interface ClientData {
   qrcodeText: string;
   linkGoogle: string;
   renovacaoAutomatica: string;
+  criacao: string;
+  ctdigital:string;
+  logotipo: string;
+  anuncio: string;
 }
 
 export const EditContrato = () => {

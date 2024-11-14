@@ -41,7 +41,7 @@ export const Comprovantes: React.FC = () => {
         await updateDoc(docRef, data);
         setClientData(data);
         console.log("Dados atualizados com sucesso!");
-        navigate("/financeiro");
+        navigate(-1);
       }
     } catch (error) {
       console.error("Erro ao atualizar os dados de financeiro: ", error);

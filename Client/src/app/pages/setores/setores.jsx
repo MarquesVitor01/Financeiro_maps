@@ -13,7 +13,7 @@ export const Setores = () => {
     };
 
     const { cargo, userId } = useAuth(); 
-    const adminId = "mJT4AdiNCuURJsbibAPcNeMid1I3";
+    const adminId = "9CfoYP8HtPg7nymfGzrn8GE2NOR2";
 
     return (
         <div className="sector-selection container-fluid">

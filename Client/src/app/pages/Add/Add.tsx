@@ -10,11 +10,11 @@ import "./Components/Styles/add.css";
 import { useAuth } from "../../context/AuthContext";
 import { InfoAdicionais } from "./Components/InfoAdicionais";
 
-interface BoletoData {
-  pdfLink: string;
-  billetLink: string;
-  barcode: string;
-}
+// interface BoletoData {
+//   pdfLink: string;
+//   billetLink: string;
+//   barcode: string;
+// }
 
 export const Add = () => {
   const userId = auth.currentUser?.uid;
@@ -53,6 +53,10 @@ export const Add = () => {
     qrcodeText: "",
     renovacaoAutomatica: "",
     linkGoogle: "",
+    criacao: "",
+    ctdigital:"",
+    logotipo: "",
+    anuncio: "",
     opcao1: false,
     opcao2: false,
     opcao3: false,
@@ -63,7 +67,7 @@ export const Add = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tipoDocumento, setTipoDocumento] = useState("CPF");
-  const [isRotated, setIsRotated] = useState(false);
+  // const [isRotated, setIsRotated] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
   const handleInputChange = (
@@ -87,10 +91,10 @@ export const Add = () => {
     }
   };
 
-  const handleToggleDocumento = () => {
-    setTipoDocumento((prev) => (prev === "CPF" ? "CNPJ" : "CPF"));
-    setIsRotated((prev) => !prev);
-  };
+  // const handleToggleDocumento = () => {
+  //   setTipoDocumento((prev) => (prev === "CPF" ? "CNPJ" : "CPF"));
+  //   setIsRotated((prev) => !prev);
+  // };
 
   const handleSelectChange = (selectedOption: any) => {
     setForm({ ...form, operador: selectedOption.value });

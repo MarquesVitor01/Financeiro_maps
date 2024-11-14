@@ -11,6 +11,8 @@ import {
   faTableList,
   faX,
   faBars,
+  faMoneyCheckDollar,
+  faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
@@ -20,9 +22,13 @@ import {
   getDocs,
   doc,
   writeBatch,
+  setDoc,
+  deleteDoc,
+  getDoc,
 } from "firebase/firestore";
 import { toast, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
+import { getAuth } from "firebase/auth";
 
 interface Marketing {
   id: string;
@@ -38,6 +44,7 @@ interface Marketing {
   nomeMonitor: string;
   monitoriaConcluidaYes: boolean;
   servicosConcluidos: boolean;
+  createdBy: string;
 }
 
 interface venda {
@@ -65,7 +72,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
   setTotalRealizados,
 }) => {
   const [marketings, setMarketings] = useState<Marketing[]>([]);
-  const [selectedItems] = useState<Set<string>>(new Set());
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [modalExcel, setModalExcel] = useState(false);
   const itemsPerPage = 5;
@@ -109,6 +116,76 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
     fetchMarketings();
   }, [setTotalMarketings, setTotalRealizados]);
 
+  const auth = getAuth();
+  const userId = auth.currentUser?.uid;
+  const adminUserId = "9CfoYP8HtPg7nymfGzrn8GE2NOR2";
+  const SupervisorUserId = "wWLmbV9TIUemmTkcMUSAQ4xGlju2";
+
+  useEffect(() => {
+    const fetchVendas = async () => {
+      setLoading(true);
+      try {
+        const marketingsCollection = collection(db, "marketings");
+        const marketingsSnapshot = await getDocs(marketingsCollection);
+        const marketingsList = marketingsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Marketing[];
+
+        const filteredVendas =
+          userId === adminUserId || userId === SupervisorUserId
+            ? marketingsList
+            : marketingsList.filter((marketing) => marketing.createdBy === userId);
+
+        setMarketings(filteredVendas);
+        setTotalMarketings(filteredVendas.length);
+      } catch (error) {
+        console.error("Erro ao buscar marketings:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVendas();
+  }, [setTotalMarketings, userId]);
+
+  const handleCheckboxChange = (id: string) => {
+    setSelectedItems((prevSelectedItems) => {
+      const newSelectedItems = new Set(prevSelectedItems);
+      if (newSelectedItems.has(id)) {
+        newSelectedItems.delete(id);
+      } else {
+        newSelectedItems.add(id);
+      }
+      return newSelectedItems;
+    });
+  };
+
+  const handleRemoveSelected = async () => {
+    if (selectedItems.size === 0) return;
+
+    const deletePromises = Array.from(selectedItems).map(async (id) => {
+      const marketingDoc = doc(db, "marketings", id);
+      const vendaData = (await getDoc(marketingDoc)).data();
+
+      if (vendaData) {
+        await setDoc(doc(db, "cancelados", id), {
+          ...vendaData,
+          deletedAt: new Date(),
+        });
+      }
+
+      await deleteDoc(marketingDoc);
+    });
+
+    await Promise.all(deletePromises);
+
+    setMarketings((prevVendas) => {
+      return prevVendas.filter((marketing) => !selectedItems.has(marketing.id));
+    });
+    setSelectedItems(new Set());
+  };
+
   const applyFilters = () => {
     let filteredClients = marketings.filter((marketing) => {
       const lowerCaseTerm = searchTerm.toLowerCase();
@@ -136,13 +213,13 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       const isDateInRange =
         startDate && endDate
           ? marketingData >= new Date(startDate) &&
-            marketingData <= new Date(endDate)
+          marketingData <= new Date(endDate)
           : isStartDateValid;
 
       const marketingDataVencimento = new Date(marketing.dataVencimento);
       const isDueDateValid = dueDate
         ? marketingDataVencimento.toDateString() ===
-          new Date(dueDate).toDateString()
+        new Date(dueDate).toDateString()
         : true;
 
       const isvendaTypeValid = vendaType
@@ -315,7 +392,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
             )}
 
             <button
-              className="remove-btn"
+              className="planilha-btn"
               onClick={handleSyncClients}
               disabled={syncLoading}
               data-tooltip-id="tooltip-sync"
@@ -325,6 +402,17 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
             >
               <FontAwesomeIcon icon={faSync} color="#fff" spin={syncLoading} />
             </button>
+
+            {adminUserId && (
+              <button onClick={handleRemoveSelected} className="remove-btn" data-tooltip-id="remove-tooltip"
+                data-tooltip-content="Remover selecionados">
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+
+                />
+                <Tooltip id="remove-tooltip" place="top" className="custom-tooltip" />
+              </button>
+            )}
 
             {/* Tooltips */}
             <Tooltip id="tooltip-add" place="top" className="custom-tooltip" />
@@ -369,7 +457,14 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
             <tbody>
               {currentClients.map((marketing) => (
                 <tr key={marketing.id}>
-                  <td></td>
+                  <td className={selectedItems.has(marketing.id) ? "selected" : ""}>
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.has(marketing.id)}
+                      onChange={() => handleCheckboxChange(marketing.id)}
+                      className="checkbox-table"
+                    />
+                  </td>
                   <td
                     className={
                       selectedItems.has(marketing.id) ? "selected" : ""
@@ -378,66 +473,67 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                     {marketing.cnpj
                       ? formatCNPJ(marketing.cnpj)
                       : marketing.cpf
-                      ? formatCPF(marketing.cpf)
-                      : marketing.cnpj || marketing.cpf}
+                        ? formatCPF(marketing.cpf)
+                        : marketing.cnpj || marketing.cpf}
                   </td>
                   <td
-                    className={`${
-                      selectedItems.has(marketing.id) ? "selected" : ""
-                    } ${
-                      marketing.servicosConcluidos ? "servicos-realizados" : ""
-                    }`}
+                    className={`${selectedItems.has(marketing.id) ? "selected" : ""
+                      } ${marketing.servicosConcluidos ? "servicos-realizados" : ""
+                      }`}
                   >
                     {marketing.responsavel}
                   </td>
                   <td
-                    className={`${
-                      selectedItems.has(marketing.id) ? "selected" : ""
-                    } ${
-                      marketing.servicosConcluidos ? "servicos-realizados" : ""
-                    }`}
+                    className={`${selectedItems.has(marketing.id) ? "selected" : ""
+                      } ${marketing.servicosConcluidos ? "servicos-realizados" : ""
+                      }`}
                   >
                     {marketing.email1 || marketing.email2}
                   </td>
                   <td
-                    className={`${
-                      selectedItems.has(marketing.id) ? "selected" : ""
-                    } ${
-                      marketing.servicosConcluidos ? "servicos-realizados" : ""
-                    }`}
+                    className={`${selectedItems.has(marketing.id) ? "selected" : ""
+                      } ${marketing.servicosConcluidos ? "servicos-realizados" : ""
+                      }`}
                   >
                     {marketing.operador.replace(/\./g, " ")}
                   </td>
                   <td
-                    className={`${
-                      selectedItems.has(marketing.id) ? "selected" : ""
-                    } ${
-                      marketing.servicosConcluidos ? "servicos-realizados" : ""
-                    }`}
+                    className={`${selectedItems.has(marketing.id) ? "selected" : ""
+                      } ${marketing.servicosConcluidos ? "servicos-realizados" : ""
+                      }`}
                   >
                     {marketing.nomeMonitor}
                   </td>
                   <td className="icon-container">
-  <Link
-    to={`/contrato/${marketing.id}`}
-    data-tooltip-id="tooltip-view-contract"
-    data-tooltip-content="Visualizar contrato"
-  >
-    <FontAwesomeIcon icon={faEye} className="icon-spacing text-dark" />
-  </Link>
+                    <Link
+                      to={`/contrato/${marketing.id}`}
+                      data-tooltip-id="tooltip-view-contract"
+                      data-tooltip-content="Visualizar contrato"
+                    >
+                      <FontAwesomeIcon icon={faEye} className="icon-spacing text-dark" />
+                    </Link>
 
-  <Link
-    to={`/fichamarketing/${marketing.id}`}
-    data-tooltip-id="tooltip-marketing-file"
-    data-tooltip-content="Ficha de marketing"
-  >
-    <FontAwesomeIcon icon={faTableList} className="icon-spacing text-dark" />
-  </Link>
+                    <Link
+                      to={`/fichamarketing/${marketing.id}`}
+                      data-tooltip-id="tooltip-marketing-file"
+                      data-tooltip-content="Ficha de marketing"
+                    >
+                      <FontAwesomeIcon icon={faTableList} className="icon-spacing text-dark" />
+                    </Link>
+                    <Link to={`/fichaboleto/${marketing.id}`}>
+                      <FontAwesomeIcon
+                        icon={faMoneyCheckDollar}
+                        className="icon-spacing text-dark"
+                        data-tooltip-id="tooltip-boleto"
+                        data-tooltip-content="Ver ficha de boleto"
+                      />
+                      <Tooltip id="tooltip-boleto" place="top" className="custom-tooltip" />
+                    </Link>
 
-  {/* Tooltips */}
-  <Tooltip id="tooltip-view-contract" place="top" className="custom-tooltip" />
-  <Tooltip id="tooltip-marketing-file" place="top" className="custom-tooltip" />
-</td>
+                    {/* Tooltips */}
+                    <Tooltip id="tooltip-view-contract" place="top" className="custom-tooltip" />
+                    <Tooltip id="tooltip-marketing-file" place="top" className="custom-tooltip" />
+                  </td>
 
                 </tr>
               ))}

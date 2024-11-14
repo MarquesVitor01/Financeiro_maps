@@ -5,6 +5,10 @@ interface InfoAdicionaisProps {
   form: {
     observacoes: string;
     renovacaoAutomatica: string;
+    criacao: string;
+    ctdigital:string;
+    logotipo: string;
+    anuncio: string;
   };
   handleInputChange: (
     e: React.ChangeEvent<
@@ -50,6 +54,73 @@ export const InfoAdicionais: React.FC<InfoAdicionaisProps> = ({
           <option value="Sim">Sim</option>
           <option value="Não">Não</option>
         </select>
+      </div>
+      <div className="row">
+
+      <div className="form-group mb-3 col-md-3">
+        <label htmlFor="criacao" className="form-label text-white">
+          Criação
+        </label>
+        <select
+          className="form-control"
+          id="criacao"
+          name="criacao"
+          value={form.criacao}
+          onChange={handleInputChange}
+        >
+          <option value="">Selecione</option>
+          <option value="Sim">Sim</option>
+          <option value="Não">Não</option>
+        </select>
+      </div>
+      <div className="form-group mb-3 col-md-3">
+        <label htmlFor="ctdigital" className="form-label text-white">
+          C.Digital
+        </label>
+        <select
+          className="form-control"
+          id="ctdigital"
+          name="ctdigital"
+          value={form.ctdigital}
+          onChange={handleInputChange}
+        >
+          <option value="">Selecione</option>
+          <option value="Sim">Sim</option>
+          <option value="Não">Não</option>
+        </select>
+      </div>
+      <div className="form-group mb-3 col-md-3">
+        <label htmlFor="anuncio" className="form-label text-white">
+          Anúncio
+        </label>
+        <select
+          className="form-control"
+          id="anuncio"
+          name="anuncio"
+          value={form.anuncio}
+          onChange={handleInputChange}
+        >
+          <option value="">Selecione</option>
+          <option value="Sim">Sim</option>
+          <option value="Não">Não</option>
+        </select>
+      </div>
+      <div className="form-group mb-3 col-md-3">
+        <label htmlFor="logotipo" className="form-label text-white">
+          Logotipo
+        </label>
+        <select
+          className="form-control"
+          id="logotipo"
+          name="logotipo"
+          value={form.logotipo}
+          onChange={handleInputChange}
+        >
+          <option value="">Selecione</option>
+          <option value="Sim">Sim</option>
+          <option value="Não">Não</option>
+        </select>
+      </div>
       </div>
     </div>
   );

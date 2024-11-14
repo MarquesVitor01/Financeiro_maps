@@ -163,7 +163,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       const vendaDataVencimento = new Date(venda.dataVencimento);
       const isDueDateValid = dueDate
         ? vendaDataVencimento.toDateString() ===
-          new Date(dueDate).toDateString()
+        new Date(dueDate).toDateString()
         : true;
 
       const isSaleTypeValid = saleType ? venda.contrato === saleType : true;
@@ -235,18 +235,14 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       }, {} as { [key: string]: any });
     });
 
-    // Cria a planilha com os dados filtrados
     const ws = XLSX.utils.json_to_sheet(filteredData);
 
-    // Define o range de células e aplica o filtro
     const range = XLSX.utils.decode_range(ws["!ref"]!);
     ws["!autofilter"] = { ref: XLSX.utils.encode_range(range) };
 
-    // Cria o workbook e adiciona a worksheet
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "vendas");
 
-    // Exporta o arquivo Excel com o filtro aplicado
     XLSX.writeFile(wb, "planilha_vendas.xlsx");
   };
 
@@ -278,6 +274,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
           onApplyFilters={handleApplyFilters}
         />
       )}
+      
 
       <div className="header-list">
         <div className="header-content">
@@ -299,32 +296,32 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
           </div>
 
           <div className="selects-container">
-            <Link to="/add" className="create-btn"  data-tooltip-id="add-tooltip"
-                data-tooltip-content="Nova venda">
+            <Link to="/add" className="create-btn" data-tooltip-id="add-tooltip"
+              data-tooltip-content="Nova venda">
               <FontAwesomeIcon
                 icon={faPlus}
-               
+
               />
               <Tooltip id="add-tooltip" place="top" className="custom-tooltip" />
             </Link>
 
             {adminUserId && (
-              <button onClick={handleRemoveSelected} className="remove-btn"  data-tooltip-id="remove-tooltip"
-              data-tooltip-content="Remover selecionados">
+              <button onClick={handleRemoveSelected} className="remove-btn" data-tooltip-id="remove-tooltip"
+                data-tooltip-content="Remover selecionados">
                 <FontAwesomeIcon
                   icon={faTrashAlt}
-                 
+
                 />
                 <Tooltip id="remove-tooltip" place="top" className="custom-tooltip" />
               </button>
             )}
 
             <button className="filtros-btn" onClick={openModalExcel} data-tooltip-id="filter-tooltip"
-                data-tooltip-content="Aplicar filtros">
+              data-tooltip-content="Aplicar filtros">
               <FontAwesomeIcon
                 icon={faFilter}
                 color="#fff"
-                
+
               />
               <Tooltip id="filter-tooltip" place="top" className="custom-tooltip" />
             </button>
@@ -376,8 +373,8 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                     {venda.cnpj
                       ? formatCNPJ(venda.cnpj)
                       : venda.cpf
-                      ? formatCPF(venda.cpf)
-                      : venda.cnpj || venda.cpf}
+                        ? formatCPF(venda.cpf)
+                        : venda.cnpj || venda.cpf}
                   </td>
                   <td className={selectedItems.has(venda.id) ? "selected" : ""}>
                     {venda.responsavel}
@@ -390,46 +387,46 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                   </td>
 
                   <td className="icon-container">
-  <Link to={`/editcontrato/${venda.id}`}>
-    <FontAwesomeIcon
-      icon={faEdit}
-      className="icon-spacing text-dark"
-      data-tooltip-id="tooltip-edit"
-      data-tooltip-content="Editar contrato"
-    />
-    <Tooltip id="tooltip-edit" place="top" className="custom-tooltip" />
-  </Link>
+                    <Link to={`/editcontrato/${venda.id}`}>
+                      <FontAwesomeIcon
+                        icon={faEdit}
+                        className="icon-spacing text-dark"
+                        data-tooltip-id="tooltip-edit"
+                        data-tooltip-content="Editar contrato"
+                      />
+                      <Tooltip id="tooltip-edit" place="top" className="custom-tooltip" />
+                    </Link>
 
-  <Link to={`/comprovantes/${venda.id}`}>
-    <FontAwesomeIcon
-      icon={faFile}
-      className="icon-spacing text-dark"
-      data-tooltip-id="tooltip-comprovantes"
-      data-tooltip-content="Ver comprovantes"
-    />
-    <Tooltip id="tooltip-comprovantes" place="top" className="custom-tooltip" />
-  </Link>
+                    <Link to={`/comprovantes/${venda.id}`}>
+                      <FontAwesomeIcon
+                        icon={faFile}
+                        className="icon-spacing text-dark"
+                        data-tooltip-id="tooltip-comprovantes"
+                        data-tooltip-content="Ver comprovantes"
+                      />
+                      <Tooltip id="tooltip-comprovantes" place="top" className="custom-tooltip" />
+                    </Link>
 
-  <Link to={`/contrato/${venda.id}`}>
-    <FontAwesomeIcon
-      icon={faEye}
-      className="icon-spacing text-dark"
-      data-tooltip-id="tooltip-contrato"
-      data-tooltip-content="Visualizar contrato"
-    />
-    <Tooltip id="tooltip-contrato" place="top" className="custom-tooltip" />
-  </Link>
+                    <Link to={`/contrato/${venda.id}`}>
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="icon-spacing text-dark"
+                        data-tooltip-id="tooltip-contrato"
+                        data-tooltip-content="Visualizar contrato"
+                      />
+                      <Tooltip id="tooltip-contrato" place="top" className="custom-tooltip" />
+                    </Link>
 
-  <Link to={`/fichaboleto/${venda.id}`}>
-    <FontAwesomeIcon
-      icon={faMoneyCheckDollar}
-      className="icon-spacing text-dark"
-      data-tooltip-id="tooltip-boleto"
-      data-tooltip-content="Ver ficha de boleto"
-    />
-    <Tooltip id="tooltip-boleto" place="top" className="custom-tooltip" />
-  </Link>
-</td>
+                    <Link to={`/fichaboleto/${venda.id}`}>
+                      <FontAwesomeIcon
+                        icon={faMoneyCheckDollar}
+                        className="icon-spacing text-dark"
+                        data-tooltip-id="tooltip-boleto"
+                        data-tooltip-content="Ver ficha de boleto"
+                      />
+                      <Tooltip id="tooltip-boleto" place="top" className="custom-tooltip" />
+                    </Link>
+                  </td>
 
                 </tr>
               ))}

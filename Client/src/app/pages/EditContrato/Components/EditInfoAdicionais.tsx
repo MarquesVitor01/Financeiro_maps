@@ -5,6 +5,10 @@ interface VendaData {
   observacoes: string;
   qrcodeText: string;
   renovacaoAutomatica: string;
+  criacao: string;
+  ctdigital: string;
+  logotipo: string;
+  anuncio: string;
 }
 
 interface EditInfoAdicionaisProps {
@@ -99,6 +103,34 @@ const SelectField = ({
   </div>
 );
 
+const SelectOptions = ({
+  id,
+  label,
+  name,
+  value,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+}) => (
+  <div className="form-group mb-3 col-md-3">
+    <label htmlFor={id}>{label}</label>
+    <select
+      id={id}
+      name={name}
+      className="form-control"
+      value={value}
+      onChange={onChange}
+    >
+      <option value="Sim">Sim</option>
+      <option value="">Não</option>
+    </select>
+  </div>
+);
+
 export const EditInfoAdicionais: React.FC<EditInfoAdicionaisProps> = ({ form, handleInputChange }) => {
   if (!form) return null;
 
@@ -122,6 +154,40 @@ export const EditInfoAdicionais: React.FC<EditInfoAdicionaisProps> = ({ form, ha
         value={form.renovacaoAutomatica}
         onChange={handleInputChange}
       />
+
+      <div className='row'>
+        <SelectOptions
+          id="criacao"
+          label="Criação"
+          name="criacao"
+          value={form.criacao}
+          onChange={handleInputChange}
+        />
+
+        <SelectOptions
+          id="ctdigital"
+          label="C.Digital"
+          name="ctdigital"
+          value={form.ctdigital}
+          onChange={handleInputChange}
+        />
+        <SelectOptions
+          id="anuncio"
+          label="Anúncio"
+          name="anuncio"
+          value={form.anuncio}
+          onChange={handleInputChange}
+        />
+
+        <SelectOptions
+          id="logotipo"
+          label="Logotipo"
+          name="logotipo"
+          value={form.logotipo}
+          onChange={handleInputChange}
+        />
+      </div>
+
       <InputField
         id="qrcode"
         label="Texto para QR Code"
