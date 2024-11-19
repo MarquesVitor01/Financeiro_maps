@@ -12,19 +12,21 @@ app.use(cors({
   origin: "https://grupomapscartaodigital.com.br",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 }));
 
-app.options("*", cors());
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "https://grupomapscartaodigital.com.br");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.sendStatus(200);
+});
 
 app.use(express.json());
 
 app.use("/upload", uploadRoutes);
 app.use("/generate-boleto-cnpj", boletoCnpj);
 app.use("/generate-boleto-cpf", boletoCpf);
-
-app.get("/test-cors", (req, res) => {
-  res.json({ message: "CORS is working!" });
-});
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
