@@ -12,6 +12,7 @@ interface OperadorProps {
     valorVenda: number;
     contrato: string;
     formaPagamento: string;
+    account: string;
   };
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleSelectChange: (selectedOption: any) => void;
@@ -127,7 +128,7 @@ export const Operador: React.FC<OperadorProps> = ({
       </div>
 
       <div className="form-group mb-3 col-md-4">
-        <label htmlFor="equipe">Equipe</label>
+        <label htmlFor="equipe">Grupo</label>
         <input
           type="text"
           className="form-control"
@@ -139,6 +140,22 @@ export const Operador: React.FC<OperadorProps> = ({
         />
       </div>
 
+      <div className="form-group mb-3 col-md-4">
+        <label htmlFor="account">Equipe</label>
+        <select
+          className="form-control"
+          id="account"
+          name="account"
+          value={form.account}
+          onChange={handleInputChange}
+          disabled
+        >
+          <option value="">Selecione uma opção</option>
+          <option value="equipe_marcio">Equipe do Márcio</option>
+          <option value="equipe_kaio">Equipe do Kaio</option>
+          <option value="equipe_antony">Equipe do Antony</option>
+        </select>
+      </div>
       <div className="form-group mb-3 col-md-4">
         <label htmlFor="validade">Válido por</label>
         <select

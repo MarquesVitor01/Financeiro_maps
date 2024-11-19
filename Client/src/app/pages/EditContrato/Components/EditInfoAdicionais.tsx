@@ -103,30 +103,31 @@ const SelectField = ({
   </div>
 );
 
-const SelectOptions = ({
+
+const SelectOption = ({
   id,
   label,
   name,
   value,
+  options,
   onChange,
 }: {
   id: string;
   label: string;
   name: string;
   value: string;
+  options: Array<{ value: string; label: string }>;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) => (
   <div className="form-group mb-3 col-md-3">
     <label htmlFor={id}>{label}</label>
-    <select
-      id={id}
-      name={name}
-      className="form-control"
-      value={value}
-      onChange={onChange}
-    >
-      <option value="Sim">Sim</option>
-      <option value="">Não</option>
+    <select className="form-control" id={id} name={name} value={value} onChange={onChange}>
+      <option value="">Selecione</option>
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
     </select>
   </div>
 );
@@ -156,35 +157,53 @@ export const EditInfoAdicionais: React.FC<EditInfoAdicionaisProps> = ({ form, ha
       />
 
       <div className='row'>
-        <SelectOptions
+        <SelectOption
           id="criacao"
           label="Criação"
           name="criacao"
           value={form.criacao}
           onChange={handleInputChange}
+          options={[
+            { value: "sim", label: "Sim" },
+            { value: "nao", label: "Não" },
+          ]}
         />
 
-        <SelectOptions
+
+        <SelectOption
           id="ctdigital"
           label="C.Digital"
           name="ctdigital"
           value={form.ctdigital}
           onChange={handleInputChange}
+          options={[
+            { value: "sim", label: "Sim" },
+            { value: "nao", label: "Não" },
+          ]}
         />
-        <SelectOptions
+
+        <SelectOption
           id="anuncio"
           label="Anúncio"
           name="anuncio"
           value={form.anuncio}
           onChange={handleInputChange}
+          options={[
+            { value: "sim", label: "Sim" },
+            { value: "nao", label: "Não" },
+          ]}
         />
 
-        <SelectOptions
+        <SelectOption
           id="logotipo"
           label="Logotipo"
           name="logotipo"
           value={form.logotipo}
           onChange={handleInputChange}
+          options={[
+            { value: "sim", label: "Sim" },
+            { value: "nao", label: "Não" },
+          ]}
         />
       </div>
 

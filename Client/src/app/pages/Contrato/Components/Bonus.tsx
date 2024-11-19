@@ -30,12 +30,6 @@ export const Bonus: React.FC = () => {
     fetchClientData();
   }, [id]);
 
-  const [selectedOptions, setSelectedOptions] = useState({
-    criacao: false,
-    anuncio: false,
-    cartaoDigital: true,
-    logotipo: true,
-  });
 
 
 
@@ -57,7 +51,7 @@ export const Bonus: React.FC = () => {
         <h5 className="text-white ">BÔNUS</h5>
         <div className="d-flex justify-content-center my-1">
           {
-            clientData.criacao &&
+            clientData.criacao === "sim" &&
             <div className="mx-2">
               <strong
                 style={{
@@ -69,7 +63,7 @@ export const Bonus: React.FC = () => {
             </div>
           }
           {
-            clientData.anuncio &&
+            clientData.anuncio === "sim" &&
             <div className="mx-2" >
               <strong
                 style={{
@@ -81,7 +75,8 @@ export const Bonus: React.FC = () => {
             </div>
           }
           {
-            clientData.ctdigital && <div className="mx-2" >
+            clientData.ctdigital === "sim" &&
+            <div className="mx-2" >
               <strong
                 style={{
                   color: "red",
@@ -91,7 +86,7 @@ export const Bonus: React.FC = () => {
               </strong>
             </div>
           }
-          { clientData.logotipo &&
+          {clientData.logotipo === "sim" &&
             <div className="mx-2" >
               <strong
                 style={{

@@ -45,6 +45,7 @@ interface ClientData {
   ctdigital:string;
   logotipo: string;
   anuncio: string;
+  
 }
 
 export const EditContrato = () => {

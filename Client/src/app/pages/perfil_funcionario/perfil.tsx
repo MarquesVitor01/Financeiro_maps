@@ -217,7 +217,8 @@ export const Perfil: React.FC = () => {
           vendasSemanais={perfilData.vendasSemanais}
           vendasDiarias={perfilData.vendasDiarias}
         />
-        <footer className="profile-footer">
+      </div>
+        <footer className="profile-footer mt-5">
           <>
             {user?.uid === adminUserId && (
               <>
@@ -294,9 +295,6 @@ export const Perfil: React.FC = () => {
             Sair
           </button>
         </footer>
-      </div>
-
-
 
       <ModalEditarFoto
         isOpen={isModalOpen}

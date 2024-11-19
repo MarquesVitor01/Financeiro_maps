@@ -28,10 +28,6 @@ interface DadosEmpresaProps {
     horarioFuncionamento: string;
     responsavel: string;
     cargo: string;
-    opcao1: boolean;
-    opcao2: boolean;
-    opcao3: boolean;
-    opcao4: boolean;
   };
   handleInputChange: (
     e: React.ChangeEvent<

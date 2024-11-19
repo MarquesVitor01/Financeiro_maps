@@ -7,8 +7,8 @@ interface InfoAdicionaisProps {
     renovacaoAutomatica: string;
     criacao: string;
     ctdigital:string;
-    logotipo: string;
     anuncio: string;
+    logotipo: string;
   };
   handleInputChange: (
     e: React.ChangeEvent<
@@ -51,8 +51,8 @@ export const InfoAdicionais: React.FC<InfoAdicionaisProps> = ({
           onChange={handleInputChange}
         >
           <option value="">Selecione</option>
-          <option value="Sim">Sim</option>
-          <option value="Não">Não</option>
+          <option value="sim">Sim</option>
+          <option value="nao">Não</option>
         </select>
       </div>
       <div className="row">
@@ -69,8 +69,8 @@ export const InfoAdicionais: React.FC<InfoAdicionaisProps> = ({
           onChange={handleInputChange}
         >
           <option value="">Selecione</option>
-          <option value="Sim">Sim</option>
-          <option value="Não">Não</option>
+          <option value="sim">Sim</option>
+          <option value="nao">Não</option>
         </select>
       </div>
       <div className="form-group mb-3 col-md-3">
@@ -85,8 +85,8 @@ export const InfoAdicionais: React.FC<InfoAdicionaisProps> = ({
           onChange={handleInputChange}
         >
           <option value="">Selecione</option>
-          <option value="Sim">Sim</option>
-          <option value="Não">Não</option>
+          <option value="sim">Sim</option>
+          <option value="nao">Não</option>
         </select>
       </div>
       <div className="form-group mb-3 col-md-3">
@@ -101,8 +101,8 @@ export const InfoAdicionais: React.FC<InfoAdicionaisProps> = ({
           onChange={handleInputChange}
         >
           <option value="">Selecione</option>
-          <option value="Sim">Sim</option>
-          <option value="Não">Não</option>
+          <option value="sim">Sim</option>
+          <option value="nao">Não</option>
         </select>
       </div>
       <div className="form-group mb-3 col-md-3">

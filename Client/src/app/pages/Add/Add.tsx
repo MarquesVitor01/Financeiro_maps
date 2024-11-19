@@ -27,6 +27,7 @@ export const Add = () => {
     createdBy: userId,
     setor: cargo,
     equipe: "G MARKETING DIGITAL",
+    account: "equipe_marcio",
     razaoSocial: "",
     cpf: "",
     cnpj: "",
@@ -57,10 +58,6 @@ export const Add = () => {
     ctdigital:"",
     logotipo: "",
     anuncio: "",
-    opcao1: false,
-    opcao2: false,
-    opcao3: false,
-    opcao4: false,
   });
 
   const [step, setStep] = useState(0);
