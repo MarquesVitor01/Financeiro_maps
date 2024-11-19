@@ -2,22 +2,22 @@
     "version": 2,
     "builds": [
       {
-        "src": "server.js",
+        "src": "index.js",
         "use": "@vercel/node"
       }
     ],
     "routes": [
       {
         "src": "/upload(.*)",
-        "dest": "/server.js"
+        "dest": "/index.js"
       },
       {
         "src": "/generate-boleto-cnpj(.*)",
-        "dest": "/server.js"
+        "dest": "/index.js"
       },
       {
         "src": "/generate-boleto-cpf(.*)",
-        "dest": "/server.js"
+        "dest": "/index.js"
       }
     ]
   }
