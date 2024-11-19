@@ -17,6 +17,10 @@ app.use("/upload", uploadRoutes);
 app.use("/generate-boleto-cnpj", boletoCnpj);
 app.use("/generate-boleto-cpf", boletoCpf);
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+// Exporte como função para a Vercel
+module.exports = app;
+
+
+// app.listen(port, () => {
+//   console.log(`Server running on http://localhost:${port}`);
+// });

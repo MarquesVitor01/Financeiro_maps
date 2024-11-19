@@ -162,7 +162,7 @@ export const FichaBoleto: React.FC = () => {
                       className="btn btn-primary"
                       onClick={() =>
                         generateBoletos(
-                          `http://localhost:5000/generate-boleto-${type.toLowerCase()}`,
+                          `https://crm-plataform-app-6t3u.vercel.app/generate-boleto-${type.toLowerCase()}`,
                           idx === 0
                         )
                       }
