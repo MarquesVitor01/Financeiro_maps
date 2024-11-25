@@ -4,20 +4,27 @@ const getEfiPayInstance = require("../config/efipayConfig");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-    const { email, birth, name, cpf, phone_number, items, shippingValue, account } = req.body;
+    const { email, birth, name, cpf, phone_number, items, shippingValue, account, dataVencimento } = req.body;
 
-    if (!name || !email || !items || !cpf) {
+    if (!name || !email || !items || !cpf || !dataVencimento) {
         return res.status(400).send("Missing required fields.");
     }
 
     const efipay = getEfiPayInstance(account);
+    let vencimentoDate;
+    try {
+      vencimentoDate = new Date(dataVencimento);
+      if (isNaN(vencimentoDate)) {
+        throw new Error("Invalid date");
+      }
+    } catch (error) {
+      return res.status(400).send("Invalid date format for dataVencimento.");
+    }
 
     const body = {
         payment: {
             banking_billet: {
-                expire_at: new Date(new Date().setDate(new Date().getDate() + 7))
-                    .toISOString()
-                    .split("T")[0],
+                expire_at: vencimentoDate.toISOString().split("T")[0], 
                 customer: {
                     name,
                     email,
