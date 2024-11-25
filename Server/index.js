@@ -10,8 +10,8 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors({
-  // origin: process.env.FRONTEND_URL || "https://grupomapscartaodigital.com.br",
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: process.env.FRONTEND_URL || "https://grupomapscartaodigital.com.br",
+  // origin: process.env.FRONTEND_URL || "http://localhost:3000",
 }));
 app.use(express.json());
 
@@ -21,9 +21,9 @@ app.use("/generate-boleto-cpf", boletoCpf);
 app.use("/v1/charge", chargeRoutes);
 
 // Exporte como função para a Vercel
-// module.exports = app;
+module.exports = app;
 
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server running on http://localhost:${port}`);
+// });
