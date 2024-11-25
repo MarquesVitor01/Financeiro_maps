@@ -90,7 +90,7 @@ export const FichaBoleto: React.FC = () => {
                 amount: 1,
               },
             ],
-            shippingValue: 100,
+            // shippingValue: 100,
             account: clientData.account || "equipe_marcio",
             dataVencimento: vencimento.toISOString().split("T")[0], // Incluindo a data de vencimento na requisição
           }),

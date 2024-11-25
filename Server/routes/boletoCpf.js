@@ -35,12 +35,12 @@ router.post("/", async (req, res) => {
             },
         },
         items,
-        shippings: [
-            {
-                name: "Default Shipping Cost",
-                value: shippingValue || 0,
-            },
-        ],
+        // shippings: [
+        //     {
+        //         name: "Default Shipping Cost",
+        //         value: shippingValue || 0,
+        //     },
+        // ],
     };
 
     try {
