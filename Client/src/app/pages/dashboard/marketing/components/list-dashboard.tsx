@@ -77,6 +77,8 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
   const [modalExcel, setModalExcel] = useState(false);
   const itemsPerPage = 5;
   const [loading, setLoading] = useState<boolean>(true);
+  const [modalExclusao, setModalExclusao] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [syncLoading, setSyncLoading] = useState<boolean>(false);
   const [filters, setFilters] = useState({
@@ -135,7 +137,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
         const filteredVendas =
           userId === adminUserId || userId === SupervisorUserId
             ? marketingsList
-            : marketingsList.filter((marketing) => marketing.createdBy === userId);
+            : marketingsList.filter(
+                (marketing) => marketing.createdBy === userId
+              );
 
         setMarketings(filteredVendas);
         setTotalMarketings(filteredVendas.length);
@@ -160,6 +164,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       return newSelectedItems;
     });
   };
+
+  const openModalExclusao = () => setModalExclusao(true);
+  const closeModalExclusao = () => setModalExclusao(false);
 
   const handleRemoveSelected = async () => {
     if (selectedItems.size === 0) return;
@@ -213,13 +220,13 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       const isDateInRange =
         startDate && endDate
           ? marketingData >= new Date(startDate) &&
-          marketingData <= new Date(endDate)
+            marketingData <= new Date(endDate)
           : isStartDateValid;
 
       const marketingDataVencimento = new Date(marketing.dataVencimento);
       const isDueDateValid = dueDate
         ? marketingDataVencimento.toDateString() ===
-        new Date(dueDate).toDateString()
+          new Date(dueDate).toDateString()
         : true;
 
       const isvendaTypeValid = vendaType
@@ -339,6 +346,38 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
         />
       )}
 
+      {modalExclusao && (
+        <div className="modal-overlay">
+          <div className="modal-exclusao">
+            <div className="modal-header">
+              <h2>Excluir Item</h2>
+              <button
+                className="close-btn"
+                onClick={() => setModalExclusao(false)}
+              >
+                &#10006;
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>Tem certeza de que deseja excluir este item?</p>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="planilha-btn"
+                onClick={() => {
+                  handleRemoveSelected();
+                  closeModalExclusao();
+                }}
+              >
+                Confirmar
+              </button>
+              <button className="remove-btn" onClick={closeModalExclusao}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="header-list">
         <div className="header-content">
           <h2>Marketing</h2>
@@ -403,14 +442,19 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <FontAwesomeIcon icon={faSync} color="#fff" spin={syncLoading} />
             </button>
 
-            {adminUserId && (
-              <button onClick={handleRemoveSelected} className="remove-btn" data-tooltip-id="remove-tooltip"
-                data-tooltip-content="Remover selecionados">
-                <FontAwesomeIcon
-                  icon={faTrashAlt}
-
+            {userId === adminUserId && (
+              <button
+                onClick={openModalExclusao}
+                className="remove-btn"
+                data-tooltip-id="remove-tooltip"
+                data-tooltip-content="Remover selecionados"
+              >
+                <FontAwesomeIcon icon={faTrashAlt} />
+                <Tooltip
+                  id="remove-tooltip"
+                  place="top"
+                  className="custom-tooltip"
                 />
-                <Tooltip id="remove-tooltip" place="top" className="custom-tooltip" />
               </button>
             )}
 
@@ -457,7 +501,11 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
             <tbody>
               {currentClients.map((marketing) => (
                 <tr key={marketing.id}>
-                  <td className={selectedItems.has(marketing.id) ? "selected" : ""}>
+                  <td
+                    className={
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    }
+                  >
                     <input
                       type="checkbox"
                       checked={selectedItems.has(marketing.id)}
@@ -473,34 +521,42 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                     {marketing.cnpj
                       ? formatCNPJ(marketing.cnpj)
                       : marketing.cpf
-                        ? formatCPF(marketing.cpf)
-                        : marketing.cnpj || marketing.cpf}
+                      ? formatCPF(marketing.cpf)
+                      : marketing.cnpj || marketing.cpf}
                   </td>
                   <td
-                    className={`${selectedItems.has(marketing.id) ? "selected" : ""
-                      } ${marketing.servicosConcluidos ? "servicos-realizados" : ""
-                      }`}
+                    className={`${
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    } ${
+                      marketing.servicosConcluidos ? "servicos-realizados" : ""
+                    }`}
                   >
                     {marketing.responsavel}
                   </td>
                   <td
-                    className={`${selectedItems.has(marketing.id) ? "selected" : ""
-                      } ${marketing.servicosConcluidos ? "servicos-realizados" : ""
-                      }`}
+                    className={`${
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    } ${
+                      marketing.servicosConcluidos ? "servicos-realizados" : ""
+                    }`}
                   >
                     {marketing.email1 || marketing.email2}
                   </td>
                   <td
-                    className={`${selectedItems.has(marketing.id) ? "selected" : ""
-                      } ${marketing.servicosConcluidos ? "servicos-realizados" : ""
-                      }`}
+                    className={`${
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    } ${
+                      marketing.servicosConcluidos ? "servicos-realizados" : ""
+                    }`}
                   >
                     {marketing.operador.replace(/\./g, " ")}
                   </td>
                   <td
-                    className={`${selectedItems.has(marketing.id) ? "selected" : ""
-                      } ${marketing.servicosConcluidos ? "servicos-realizados" : ""
-                      }`}
+                    className={`${
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    } ${
+                      marketing.servicosConcluidos ? "servicos-realizados" : ""
+                    }`}
                   >
                     {marketing.nomeMonitor}
                   </td>
@@ -510,7 +566,10 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                       data-tooltip-id="tooltip-view-contract"
                       data-tooltip-content="Visualizar contrato"
                     >
-                      <FontAwesomeIcon icon={faEye} className="icon-spacing text-dark" />
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="icon-spacing text-dark"
+                      />
                     </Link>
 
                     <Link
@@ -518,7 +577,10 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                       data-tooltip-id="tooltip-marketing-file"
                       data-tooltip-content="Ficha de marketing"
                     >
-                      <FontAwesomeIcon icon={faTableList} className="icon-spacing text-dark" />
+                      <FontAwesomeIcon
+                        icon={faTableList}
+                        className="icon-spacing text-dark"
+                      />
                     </Link>
                     <Link to={`/fichaboleto/${marketing.id}`}>
                       <FontAwesomeIcon
@@ -527,14 +589,25 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                         data-tooltip-id="tooltip-boleto"
                         data-tooltip-content="Ver ficha de boleto"
                       />
-                      <Tooltip id="tooltip-boleto" place="top" className="custom-tooltip" />
+                      <Tooltip
+                        id="tooltip-boleto"
+                        place="top"
+                        className="custom-tooltip"
+                      />
                     </Link>
 
                     {/* Tooltips */}
-                    <Tooltip id="tooltip-view-contract" place="top" className="custom-tooltip" />
-                    <Tooltip id="tooltip-marketing-file" place="top" className="custom-tooltip" />
+                    <Tooltip
+                      id="tooltip-view-contract"
+                      place="top"
+                      className="custom-tooltip"
+                    />
+                    <Tooltip
+                      id="tooltip-marketing-file"
+                      place="top"
+                      className="custom-tooltip"
+                    />
                   </td>
-
                 </tr>
               ))}
             </tbody>

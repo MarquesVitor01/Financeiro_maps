@@ -73,7 +73,6 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
   const [formattedDocument, setFormattedDocument] = useState<string>(tipoDocumento === "CPF" ? form?.cpf || '' : form?.cnpj || '');
 
   useEffect(() => {
-    // Atualiza o valor inicial do documento formatado sempre que tipoDocumento ou form mudarem
     setFormattedDocument(tipoDocumento === "CPF" ? form?.cpf || '' : form?.cnpj || '');
   }, [tipoDocumento, form]);
 
@@ -93,14 +92,20 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
   };
 
   const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    const maxLength = tipoDocumento === "CPF" ? 14 : 18; 
-    const trimmedValue = value.slice(0, maxLength);
-    const formattedValue = tipoDocumento === "CPF" ? formatCPF(trimmedValue) : formatCNPJ(trimmedValue);
-    setFormattedDocument(formattedValue);
+    const { value, name } = e.target;
+    let formattedValue = value;
+  
+    // Formatação para CPF ou CNPJ
+    if (name === "cpf" || name === "cnpj") {
+      const maxLength = name === "cpf" ? 14 : 18;
+      const trimmedValue = value.slice(0, maxLength);
+      formattedValue = name === "cpf" ? formatCPF(trimmedValue) : formatCNPJ(trimmedValue);
+      setFormattedDocument(formattedValue);
+    }
 
+  
     handleInputChange({
-      target: { name: tipoDocumento === "CPF" ? "cpf" : "cnpj", value: formattedValue }
+      target: { name, value: formattedValue },
     } as React.ChangeEvent<HTMLInputElement>);
   };
 

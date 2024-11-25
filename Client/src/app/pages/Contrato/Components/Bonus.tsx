@@ -44,7 +44,11 @@ export const Bonus: React.FC = () => {
   };
 
 
-
+  const formatValor = (value: string): string => {
+    return value
+      .replace(/\D/g, '') 
+      .replace(/(\d)(\d{2})$/, '$1,$2'); 
+  };
   return (
     clientData && (
       <div className="bonus card text-center mt-2">
@@ -103,7 +107,7 @@ export const Bonus: React.FC = () => {
         <div className="form-group">
           <p>
             <strong>
-              Como acordado, segue o plano no valor de <u>R$ {clientData.valorVenda}</u>, a ser pago em <u>{clientData.parcelas} parcela(s)</u>, via <u>{clientData.formaPagamento}</u>, com o vencimento para o dia <u>{formatDateToBrazilian(clientData.dataVencimento)}</u>.
+              Como acordado, segue o plano no valor de <u>R$ {clientData.valorVenda ? formatValor(clientData.valorVenda) : ""}</u>, a ser pago em <u>{clientData.parcelas} parcela(s)</u>, via <u>{clientData.formaPagamento}</u>, com o vencimento para o dia <u>{formatDateToBrazilian(clientData.dataVencimento)}</u>.
             </strong>
           </p>
         </div>

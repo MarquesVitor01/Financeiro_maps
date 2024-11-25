@@ -39,7 +39,7 @@ export const Perfil: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [usuarios, setUsuarios] = useState<any[]>([]);
-  const [showUserList, setShowUserList] = useState(false); // Novo estado para controlar a exibição da lista
+  const [showUserList, setShowUserList] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,7 +47,7 @@ export const Perfil: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const usersPerPage = 5;
 
-  const adminUserId = "mJT4AdiNCuURJsbibAPcNeMid1I3";
+  const adminUserId = "9CfoYP8HtPg7nymfGzrn8GE2NOR2";
 
   useEffect(() => {
     const loadPerfilData = async () => {

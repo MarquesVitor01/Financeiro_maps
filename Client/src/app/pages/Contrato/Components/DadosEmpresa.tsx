@@ -26,6 +26,22 @@ export const DadosEmpresa: React.FC = () => {
       .substring(0, 14);
   };
 
+  const formatCelular = (value: string): string => {
+    return value
+      .replace(/\D/g, "") 
+      .replace(/^(\d{2})(\d)/, "($1) $2") 
+      .replace(/(\d{5})(\d{5})$/, "$1-$2") 
+      .substring(0, 15); 
+  };
+
+  const formatFixo = (value: string): string => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "($1) $2")
+      .replace(/^(\(\d{2}\)) (\d{4})(\d)/, "$1 $2-$3")
+      .substring(0, 14);
+  };
+
   useEffect(() => {
     const fetchClientData = async () => {
       try {
@@ -84,13 +100,13 @@ export const DadosEmpresa: React.FC = () => {
           <div className="col-md-6 mb-1">
             <div className="p-2 bg-light rounded">
               <p>
-                <strong>TELEFONE:</strong> {clientData.fixo || "N/A"}
+                <strong>TELEFONE:</strong> { clientData.fixo ? formatFixo(clientData.fixo) : ""}
               </p>
               <p>
-                <strong>CELULAR:</strong> {clientData.celular}
+                <strong>CELULAR:</strong> { clientData.celular ? formatCelular(clientData.celular) : ""}
               </p>
               <p>
-                <strong>WHATSAPP:</strong> {clientData.whatsapp}
+                <strong>WHATSAPP:</strong> { clientData.whatsapp ? formatCelular(clientData.whatsapp) : ""}
               </p>
               <p>
                 <strong>HORÁRIO DE FUNCIONAMENTO:</strong> {clientData.horario}

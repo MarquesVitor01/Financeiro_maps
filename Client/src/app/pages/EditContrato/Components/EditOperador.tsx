@@ -107,6 +107,25 @@ const InputData = ({
 export const EditOperador: React.FC<EditOperadorProps> = ({ form, handleInputChange }) => {
   if (!form) return null;
 
+  const formatValor = (value: string): string => {
+    return value
+      .replace(/\D/g, '') 
+      .replace(/(\d)(\d{2})$/, '$1,$2'); 
+  };
+
+  const handleDocumentChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const { value, name } = e.target;
+    let formattedValue = value;
+
+    if (name === "valorVenda") {
+      formattedValue = formatValor(value);
+      handleInputChange({
+        target: { name, value: value.replace(/\D/g, "") }, 
+      } as React.ChangeEvent<HTMLInputElement>);
+    }
+  };
   return (
     <div className="row d-flex justify-content-center">
       <h4 className="text-white">Informações do Contrato</h4>
@@ -123,8 +142,8 @@ export const EditOperador: React.FC<EditOperadorProps> = ({ form, handleInputCha
         id="valorVenda"
         label="Valor da Venda"
         name="valorVenda"
-        value={form.valorVenda}
-        onChange={handleInputChange}
+        value={form.valorVenda ? formatValor(form.valorVenda) : ""}
+        onChange={handleDocumentChange}
       />
       <SelectField
         id="validade"

@@ -54,6 +54,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [modalExcel, setModalExcel] = useState(false);
+  const [modalExclusao, setModalExclusao] = useState(false);
   const itemsPerPage = 5;
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -200,6 +201,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
   const openModalExcel = () => setModalExcel(true);
   const closeModalExcel = () => setModalExcel(false);
 
+  const openModalExclusao = () => setModalExclusao(true);
+  const closeModalExclusao = () => setModalExclusao(false);
+
   const handleApplyFilters = (newFilters: any) => {
     setFilters(newFilters);
     setModalExcel(false);
@@ -255,7 +259,6 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       .substring(0, 14);
   };
 
-  // Função para formatar o CNPJ (visual)
   const formatCNPJ = (value: string): string => {
     return value
       .replace(/\D/g, "")
@@ -274,7 +277,24 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
           onApplyFilters={handleApplyFilters}
         />
       )}
-      
+      {modalExclusao && (
+        <div className="modal-overlay">
+          <div className="modal-exclusao">
+            <div className="modal-header">
+              <h2>Excluir Item</h2>
+              <button className="close-btn" onClick={() => setModalExclusao(false)}>&#10006;</button>
+            </div>
+            <div className="modal-body">
+              <p>Tem certeza de que deseja excluir este item?</p>
+            </div>
+            <div className="modal-footer">
+            <button className="planilha-btn" onClick={() => { handleRemoveSelected(); closeModalExclusao(); }}>Confirmar</button>
+              <button className="remove-btn" onClick={closeModalExclusao}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       <div className="header-list">
         <div className="header-content">
@@ -305,8 +325,8 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <Tooltip id="add-tooltip" place="top" className="custom-tooltip" />
             </Link>
 
-            {adminUserId && (
-              <button onClick={handleRemoveSelected} className="remove-btn" data-tooltip-id="remove-tooltip"
+            {userId === adminUserId && (
+              <button onClick={openModalExclusao} className="remove-btn" data-tooltip-id="remove-tooltip"
                 data-tooltip-content="Remover selecionados">
                 <FontAwesomeIcon
                   icon={faTrashAlt}

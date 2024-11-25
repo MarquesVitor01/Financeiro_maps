@@ -5,7 +5,7 @@ import { EditInfoAdicionais } from "./Components/EditInfoAdicionais";
 import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
-import { toast, ToastContainer } from "react-toastify"; 
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../Add/Components/Styles/add.css";
 
@@ -42,10 +42,9 @@ interface ClientData {
   linkGoogle: string;
   renovacaoAutomatica: string;
   criacao: string;
-  ctdigital:string;
+  ctdigital: string;
   logotipo: string;
   anuncio: string;
-  
 }
 
 export const EditContrato = () => {
@@ -85,16 +84,16 @@ export const EditContrato = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-
+    
     setClientData((prevData) =>
       prevData
         ? {
-            ...prevData,
-            [name]: value,
-            ...(name === "cpf" || name === "cnpj"
-              ? { numeroContrato: value.slice(0, 6) }
-              : {}),
-          }
+          ...prevData,
+          [name]: value,
+          ...(name === "cpf" || name === "cnpj"
+            ? { numeroContrato: value.slice(0, 6) }
+            : {}),
+        }
         : prevData
     );
   };
@@ -119,11 +118,11 @@ export const EditContrato = () => {
         }
 
         await setDoc(doc(db, "vendas", id), updatedData, { merge: true });
-        toast.success("Dados do cliente atualizados com sucesso!"); 
-        setTimeout(() => navigate(-1), 2000); 
+        toast.success("Dados do cliente atualizados com sucesso!");
+        setTimeout(() => navigate(-1), 2000);
       } catch (error) {
         console.error("Erro ao atualizar os dados do cliente: ", error);
-        toast.error("Erro ao atualizar os dados do cliente."); 
+        toast.error("Erro ao atualizar os dados do cliente.");
       }
     } else {
       console.log("ID ou clientData não disponível.");
@@ -134,7 +133,7 @@ export const EditContrato = () => {
     e.preventDefault();
     updateClientData();
   };
-  
+
   const renderStep = () => {
     switch (step) {
       case 0:

@@ -18,6 +18,10 @@
       {
         "src": "/generate-boleto-cpf(.*)",
         "dest": "/index.js"
+      },
+      {
+        "src": "/v1/charge(.*)",
+        "dest": "/index.js"
       }
     ]
   }

@@ -3,18 +3,12 @@ import { Operador } from "./Components/Operador";
 import { DadosEmpresa } from "./Components/Empresa";
 import { Navigate } from "react-router-dom";
 import { auth, db } from "../../firebaseConfig";
-import {runTransaction, doc, updateDoc, setDoc, getDoc } from "firebase/firestore";
+import { runTransaction, doc, updateDoc, setDoc, getDoc } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Components/Styles/add.css";
 import { useAuth } from "../../context/AuthContext";
 import { InfoAdicionais } from "./Components/InfoAdicionais";
-
-// interface BoletoData {
-//   pdfLink: string;
-//   billetLink: string;
-//   barcode: string;
-// }
 
 export const Add = () => {
   const userId = auth.currentUser?.uid;
@@ -47,7 +41,7 @@ export const Add = () => {
     horarioFuncionamento: "",
     responsavel: "",
     cargo: "",
-    valorVenda: 0,
+    valorVenda: "",
     contrato: "",
     parcelas: "1",
     formaPagamento: "",
@@ -55,7 +49,7 @@ export const Add = () => {
     renovacaoAutomatica: "",
     linkGoogle: "",
     criacao: "",
-    ctdigital:"",
+    ctdigital: "",
     logotipo: "",
     anuncio: "",
   });
@@ -64,7 +58,6 @@ export const Add = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tipoDocumento, setTipoDocumento] = useState("CPF");
-  // const [isRotated, setIsRotated] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
   const handleInputChange = (
@@ -73,8 +66,34 @@ export const Add = () => {
     >
   ) => {
     const { name, value } = e.target;
+    if (name === "email1" || name === "email2") {
+      const emailWithoutSpaces = value.replace(/\s+/g, "");
+      setForm((prev) => ({
+        ...prev,
+        [name]: emailWithoutSpaces,
+      }));
+    }
+    else if (name === "celular" || name === "whatsapp") {
+      const numericValue = value.replace(/\D/g, "");
 
-    if ((name === "cnpj" || name === "cpf") && value.length >= 6) {
+      if (numericValue.length <= 11) {
+        setForm((prev) => ({
+          ...prev,
+          [name]: numericValue,
+        }));
+      }
+    }
+    else if (name === "fixo") {
+      const numericValue = value.replace(/\D/g, "");
+
+      if (numericValue.length <= 10) {
+        setForm((prev) => ({
+          ...prev,
+          [name]: numericValue,
+        }));
+      }
+    }
+    else if ((name === "cnpj" || name === "cpf") && value.length >= 6) {
       setForm((prev) => ({
         ...prev,
         [name]: value,
@@ -88,10 +107,6 @@ export const Add = () => {
     }
   };
 
-  // const handleToggleDocumento = () => {
-  //   setTipoDocumento((prev) => (prev === "CPF" ? "CNPJ" : "CPF"));
-  //   setIsRotated((prev) => !prev);
-  // };
 
   const handleSelectChange = (selectedOption: any) => {
     setForm({ ...form, operador: selectedOption.value });
@@ -109,62 +124,7 @@ export const Add = () => {
     window.history.back();
   };
 
-  // const [boletoData, setBoletoData] = useState<BoletoData | null>(null);
 
-  // const generateBoleto = async () => {
-  //   try {
-  //     const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzEzMjk5NDIsImV4cCI6MTczMTMzMDU0MiwiZGF0YSI6eyJrZXlfaWQiOjIwNjM0NzgsInR5cGUiOiJhY2Nlc3NUb2tlbiIsImlkIjoiNjE0OGI4MzItYzhiNy00NGU0LWJjY2YtYjVlMDczMWZlZmMyKzE5ZWIwZTYxLTNmYjUtNDdkMS1hZWM3LTZmZjUyZDM4YTY0ZSJ9fQ.xyQ9ulIdxcvOcXGJ-vPcV5o782Nc3YpSNU0HLb5_ZTo";
-  //     const response = await fetch("http://localhost:5000/generate-boleto", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //       body: JSON.stringify({
-  //         name: form.responsavel,
-  //         email: form.email1,
-  //         cpf: form.cpf,
-  //         birth: "1977-01-15",
-  //         phone_number: form.celular,
-  //         items: [
-  //           {
-  //             name: form.validade,
-  //             value: Number(form.valorVenda),
-  //             amount: 1,
-  //           },
-  //         ],
-  //         shippingValue: 100,
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`Erro na API: ${response.status}`);
-  //     }
-
-  //     const data = await response.json();
-  //     setBoletoData({
-  //       pdfLink: data.pdfLink,
-  //       billetLink: data.billetLink,
-  //       barcode: data.barcode,
-  //     });
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Erro ao gerar boleto:", error);
-  //     toast.error("Erro ao gerar o boleto.");
-  //     return null;
-  //   }
-  // };
-
-  // const saveBoletoData = async (boletoData: BoletoData) => {
-  //   try {
-  //     const clienteRef = doc(db, "vendas", form.numeroContrato);
-  //     await updateDoc(clienteRef, { boleto: boletoData });
-  //     toast.success("Boleto salvo com sucesso!");
-  //   } catch (error) {
-  //     console.error("Erro ao salvar boleto no Firebase:", error);
-  //     toast.error("Erro ao salvar boleto.");
-  //   }
-  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -184,24 +144,15 @@ export const Add = () => {
       });
 
       toast.success("Cliente salvo com sucesso!");
-      // const boletoResponse = await generateBoleto();
-      // if (boletoResponse) {
-      //   await saveBoletoData(boletoResponse);
-      // }
-      // console.log(boletoResponse);
-      // console.log(boletoData);
-      
-
       setRedirect(true);
     } catch (error) {
       console.error("Erro ao salvar cliente:", error);
-      // toast.error("Erro ao salvar cliente ou gerar boleto.");
     } finally {
       setLoading(false);
     }
   };
-  
-  
+
+
 
   if (redirect) {
     return <Navigate to={"/vendas"} />;
@@ -226,8 +177,6 @@ export const Add = () => {
               form={form}
               handleInputChange={handleInputChange}
               tipoDocumento={tipoDocumento}
-              // handleToggleDocumento={handleToggleDocumento}
-              // isRotated={isRotated}
             />
           )}
           {step === 2 && (
@@ -268,7 +217,7 @@ export const Add = () => {
                 type="button"
                 className="btn btn-success"
                 onClick={handleSubmit}
-                disabled={loading} // Botão desativado enquanto `loading` for true
+                disabled={loading}
               >
                 {loading ? "Salvando..." : "Salvar"}
               </button>

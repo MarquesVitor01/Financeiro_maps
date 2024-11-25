@@ -9,7 +9,7 @@ interface OperadorProps {
     equipe: string;
     validade: string;
     parcelas: string;
-    valorVenda: number;
+    valorVenda: string;
     contrato: string;
     formaPagamento: string;
     account: string;
@@ -23,6 +23,25 @@ export const Operador: React.FC<OperadorProps> = ({
   form,
   handleInputChange,
 }) => {
+  const formatValor = (value: string): string => {
+    return value
+      .replace(/\D/g, '') 
+      .replace(/(\d)(\d{2})$/, '$1,$2'); 
+  };
+
+  const handleDocumentChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const { value, name } = e.target;
+    let formattedValue = value;
+
+    if (name === "valorVenda") {
+      formattedValue = formatValor(value);
+      handleInputChange({
+        target: { name, value: value.replace(/\D/g, "") }, 
+      } as React.ChangeEvent<HTMLInputElement>);
+    }
+  };
   return (
     <div className="row d-flex justify-content-center">
       <h4 className="text-white">Informações do Contrato</h4>
@@ -47,8 +66,8 @@ export const Operador: React.FC<OperadorProps> = ({
           className="form-control"
           id="valorVenda"
           name="valorVenda"
-          value={form.valorVenda}
-          onChange={handleInputChange}
+          value={form.valorVenda ? formatValor(form.valorVenda) : ""}
+          onChange={handleDocumentChange}
           placeholder='Insira o valor da venda'
         />
       </div>
@@ -140,7 +159,7 @@ export const Operador: React.FC<OperadorProps> = ({
         />
       </div>
 
-      <div className="form-group mb-3 col-md-4">
+      {/* <div className="form-group mb-3 col-md-4">
         <label htmlFor="account">Equipe</label>
         <select
           className="form-control"
@@ -155,7 +174,7 @@ export const Operador: React.FC<OperadorProps> = ({
           <option value="equipe_kaio">Equipe do Kaio</option>
           <option value="equipe_antony">Equipe do Antony</option>
         </select>
-      </div>
+      </div> */}
       <div className="form-group mb-3 col-md-4">
         <label htmlFor="validade">Válido por</label>
         <select

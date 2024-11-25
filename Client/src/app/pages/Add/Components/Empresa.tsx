@@ -63,6 +63,7 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
       .substring(0, 18);
   };
 
+
   const handleDocumentChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
