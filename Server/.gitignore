@@ -17,7 +17,7 @@
 config.json
 
 
-
+/certs
 # misc
 .DS_Store
 .env.local
