@@ -11,11 +11,15 @@ interface VendaData {
   contrato: string;
   dataVencimento: string;
   parcelas: string;
+  valorParcelado: string;
+  grupo: string;
 }
 
 interface EditOperadorProps {
   form: VendaData | null;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
 }
 
 const SelectField = ({
@@ -35,7 +39,13 @@ const SelectField = ({
 }) => (
   <div className="form-group mb-3 col-md-4">
     <label htmlFor={id}>{label}</label>
-    <select className="form-control" id={id} name={name} value={value} onChange={onChange}>
+    <select
+      className="form-control"
+      id={id}
+      name={name}
+      value={value}
+      onChange={onChange}
+    >
       <option value="">Selecione uma opção</option>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
@@ -104,13 +114,14 @@ const InputData = ({
   </div>
 );
 
-export const EditOperador: React.FC<EditOperadorProps> = ({ form, handleInputChange }) => {
+export const EditOperador: React.FC<EditOperadorProps> = ({
+  form,
+  handleInputChange,
+}) => {
   if (!form) return null;
 
   const formatValor = (value: string): string => {
-    return value
-      .replace(/\D/g, '') 
-      .replace(/(\d)(\d{2})$/, '$1,$2'); 
+    return value.replace(/\D/g, "").replace(/(\d)(\d{2})$/, "$1,$2");
   };
 
   const handleDocumentChange = (
@@ -122,7 +133,7 @@ export const EditOperador: React.FC<EditOperadorProps> = ({ form, handleInputCha
     if (name === "valorVenda") {
       formattedValue = formatValor(value);
       handleInputChange({
-        target: { name, value: value.replace(/\D/g, "") }, 
+        target: { name, value: value.replace(/\D/g, "") },
       } as React.ChangeEvent<HTMLInputElement>);
     }
   };
@@ -151,7 +162,17 @@ export const EditOperador: React.FC<EditOperadorProps> = ({ form, handleInputCha
         name="parcelas"
         value={form.parcelas}
         onChange={handleInputChange}
-        options={[...Array(12)].map((_, i) => ({ value: (i + 1).toString(), label: (i + 1).toString() }))}
+        options={[...Array(12)].map((_, i) => ({
+          value: (i + 1).toString(),
+          label: (i + 1).toString(),
+        }))}
+      />
+      <InputField
+        id="valorParcelado"
+        label="Valor Parcelado"
+        name="valorParcelado"
+        value={form.valorParcelado ? formatValor(form.valorParcelado) : ""}
+        onChange={handleDocumentChange}
       />
       <SelectField
         id="formaPagamento"
@@ -194,6 +215,18 @@ export const EditOperador: React.FC<EditOperadorProps> = ({ form, handleInputCha
         value={form.equipe}
         onChange={handleInputChange}
         readOnly
+      />
+      <SelectField
+        id="grupo"
+        label="Grupo"
+        name="grupo"
+        value={form.grupo}
+        onChange={handleInputChange}
+        options={[
+          { value: "equipe_marcio_kaio", label: "Equipe do Márcio/Kaio" },
+          { value: "equipe_antony", label: "Equipe do Antony" },
+          { value: "equipe_alef", label: "Equipe do Alef" },
+        ]}
       />
       <SelectField
         id="validade"

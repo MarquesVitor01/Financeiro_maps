@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../../firebaseConfig";
+import { db } from "../../../firebase/firebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Styles/FichaBoleto.css";
@@ -86,12 +86,12 @@ export const FichaBoleto: React.FC = () => {
             items: [
               {
                 name: clientData.validade,
-                value: Number(clientData.valorVenda),
+                value: Number(clientData.parcelas === 1 ? clientData.valorVenda : clientData.valorParcelado),
                 amount: 1,
               },
             ],
             // shippingValue: 100,
-            account: clientData.account || "equipe_marcio",
+            account: clientData.account,
             dataVencimento: vencimento.toISOString().split("T")[0], // Incluindo a data de vencimento na requisição
           }),
         });
@@ -131,8 +131,7 @@ export const FichaBoleto: React.FC = () => {
     } finally {
       setGeneratingBoleto(false);
     }
-  };
-  
+  };  
 
   const fetchBoletoDetails = async (chargeId: string) => {
     try {

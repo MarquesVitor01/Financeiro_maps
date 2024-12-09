@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLeftLong } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../../../firebaseConfig';
+import { db } from '../../../firebase/firebaseConfig';
 
 export const FichaMarketing: React.FC = () => {
   const { id } = useParams<{ id: string }>();

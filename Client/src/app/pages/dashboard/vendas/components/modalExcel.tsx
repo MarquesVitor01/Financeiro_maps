@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Select from 'react-select';
-import { db } from "../../../../firebaseConfig";
+import { db } from "../../../../firebase/firebaseConfig";
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
 interface ModalExcelProps {
@@ -13,6 +13,7 @@ interface ModalExcelProps {
     dueDate?: string;
     saleType?: string;
     salesPerson?: string;
+    saleGroup?: string;
     sorting?: string;
   }) => void;
 }
@@ -27,6 +28,7 @@ export const ModalExcel: React.FC<ModalExcelProps> = ({ onClose, onApplyFilters 
   const [endDate, setEndDate] = useState<string | undefined>();
   const [dueDate, setDueDate] = useState<string | undefined>();
   const [saleType, setSaleType] = useState<string | undefined>();
+  const [saleGroup, setSaleGroup] = useState<string | undefined>();
   const [salesPerson, setSalesPerson] = useState<string | undefined>();
   const [sorting, setSorting] = useState<string | undefined>();
   const [salesPeopleOptions, setSalesPeopleOptions] = useState<Option[]>([]);
@@ -36,6 +38,11 @@ export const ModalExcel: React.FC<ModalExcelProps> = ({ onClose, onApplyFilters 
     { value: 'Renovacao', label: 'Renovação' }
   ];
   
+  const tipoGrupoOptions: Option[] = [
+    { value: 'equipe_marcio_kaio', label: 'Equipe Márcio/Kaio' },
+    { value: 'equipe_antony', label: 'Equipe do Antony' },
+    { value: 'equipe_alef', label: 'Equipe do Alef' }
+  ];
 
 
   useEffect(() => {
@@ -67,12 +74,13 @@ export const ModalExcel: React.FC<ModalExcelProps> = ({ onClose, onApplyFilters 
     setEndDate(savedFilters.endDate || undefined);
     setDueDate(savedFilters.dueDate || undefined);
     setSaleType(savedFilters.saleType || undefined);
+    setSaleGroup(savedFilters.saleGroup || undefined);
     setSalesPerson(savedFilters.salesPerson || undefined);
     setSorting(savedFilters.sorting || undefined);
   }, []);
 
   const handleApplyFilters = () => {
-    const filters = { startDate, endDate, dueDate, saleType, salesPerson, sorting };
+    const filters = { startDate, endDate, dueDate, saleType, salesPerson, saleGroup, sorting };
     localStorage.setItem("excelFilters", JSON.stringify(filters)); // Salva os filtros
     onApplyFilters(filters);
     onClose();
@@ -83,6 +91,7 @@ export const ModalExcel: React.FC<ModalExcelProps> = ({ onClose, onApplyFilters 
     setEndDate(undefined);
     setDueDate(undefined);
     setSaleType(undefined);
+    setSaleGroup(undefined);
     setSalesPerson(undefined);
     setSorting(undefined);
     localStorage.removeItem("excelFilters"); 
@@ -141,6 +150,17 @@ export const ModalExcel: React.FC<ModalExcelProps> = ({ onClose, onApplyFilters 
                 isClearable
                 value={tipoVendaOptions.find(option => option.value === saleType) || null}
                 onChange={(option) => setSaleType(option?.value)}
+              />
+            </div>
+
+            <div className="col-md-6 mb-3">
+              <label htmlFor="saleGroup" className="form-label">Grupo</label>
+              <Select
+                options={tipoGrupoOptions}
+                placeholder="Selecione"
+                isClearable
+                value={tipoGrupoOptions.find(option => option.value === saleGroup) || null}
+                onChange={(option) => setSaleGroup(option?.value)}
               />
             </div>
 

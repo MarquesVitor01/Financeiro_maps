@@ -4,7 +4,7 @@ import { EditEmpresa } from "./Components/EditEmpresa";
 import { EditInfoAdicionais } from "./Components/EditInfoAdicionais";
 import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+import { db } from "../../firebase/firebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../Add/Components/Styles/add.css";
@@ -45,6 +45,8 @@ interface ClientData {
   ctdigital: string;
   logotipo: string;
   anuncio: string;
+  valorParcelado: string;
+  grupo: string;
 }
 
 export const EditContrato = () => {
@@ -84,16 +86,37 @@ export const EditContrato = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    
+  
     setClientData((prevData) =>
       prevData
         ? {
-          ...prevData,
-          [name]: value,
-          ...(name === "cpf" || name === "cnpj"
-            ? { numeroContrato: value.slice(0, 6) }
-            : {}),
-        }
+            ...prevData,
+            [name]: value,
+            ...(name === "cpf" || name === "cnpj"
+              ? { numeroContrato: value.slice(0, 6) }
+              : {}),
+              ...(name === "valorVenda" || name === "parcelas"
+                ? (() => {
+                    const valorVenda = parseFloat(
+                      name === "valorVenda" ? value : prevData.valorVenda || "0"
+                    );
+                    const parcelas = parseInt(
+                      name === "parcelas" ? value : prevData.parcelas || "1"
+                    );
+    
+                    if (!isNaN(valorVenda) && parcelas > 0) {
+                      if (parcelas === 1) {
+                        // Se apenas 1 parcela, valorParcelado é igual ao valorVenda
+                        return { valorParcelado: Math.round(valorVenda).toString() };
+                      } else {
+                        // Divide o valorVenda pelas parcelas e arredonda para inteiro
+                        return { valorParcelado: Math.round(valorVenda / parcelas).toString() };
+                      }
+                    }
+                    return {};
+                  })()
+                : {}),
+          }
         : prevData
     );
   };

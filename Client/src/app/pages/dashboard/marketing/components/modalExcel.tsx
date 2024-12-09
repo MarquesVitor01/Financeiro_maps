@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Select from 'react-select';
-import { db } from "../../../../firebaseConfig";
+import { db } from "../../../../firebase/firebaseConfig";
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
 interface ModalExcelProps {

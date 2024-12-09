@@ -1,7 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { db } from "../../../firebaseConfig";
+import { db } from "../../../firebase/firebaseConfig";
 import { QRCodeSVG } from 'qrcode.react';
 
 
@@ -107,7 +107,7 @@ export const Bonus: React.FC = () => {
         <div className="form-group">
           <p>
             <strong>
-              Como acordado, segue o plano no valor de <u>R$ {clientData.valorVenda ? formatValor(clientData.valorVenda) : ""}</u>, a ser pago em <u>{clientData.parcelas} parcela(s)</u>, via <u>{clientData.formaPagamento}</u>, com o vencimento para o dia <u>{formatDateToBrazilian(clientData.dataVencimento)}</u>.
+            Como acordado, segue o plano no valor de <u>R$ {clientData.valorVenda ? formatValor(clientData.valorVenda) : ""}</u>, a ser pago em <u>{clientData.parcelas} parcela(s){clientData.parcelas > 1 && ` de R$ ${clientData.valorParcelado ? formatValor(clientData.valorParcelado) : ""}`}</u>, via <u>{clientData.formaPagamento}</u>, com o vencimento para o dia <u>{formatDateToBrazilian(clientData.dataVencimento)}</u>.
             </strong>
           </p>
         </div>

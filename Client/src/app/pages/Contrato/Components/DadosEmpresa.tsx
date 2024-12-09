@@ -1,6 +1,6 @@
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { db } from "../../../firebaseConfig";
+import { db } from "../../../firebase/firebaseConfig";
 import { useParams } from "react-router-dom";
 
 export const DadosEmpresa: React.FC = () => {
@@ -127,8 +127,8 @@ export const DadosEmpresa: React.FC = () => {
                   {clientData.linkGoogle}
                 </a>
               </p>
-              <p>
-                <strong>OBSERVAÇÕES:</strong> {clientData.obs}
+              <p className="obs">
+                <strong>OBSERVAÇÕES:</strong> {clientData.observacoes}
               </p>
             </div>
           </div>

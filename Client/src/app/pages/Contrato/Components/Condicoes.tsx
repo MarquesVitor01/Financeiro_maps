@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { db } from "../../../firebaseConfig";
+import { db } from "../../../firebase/firebaseConfig";
 
 export const Condicoes: React.FC = () => {
 

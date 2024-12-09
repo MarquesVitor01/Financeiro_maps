@@ -5,7 +5,7 @@ import { FichaMonitoriaAuditoria } from "./Components/FichaMonitoriaAuditoria";
 import { FichaMonitoriaQualidade } from "./Components/fichaMonitoriaQualidade";
 import { FichaMonitoriaConfirmacao } from "./Components/FichaMonitoriaConfirmacao";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "../../../firebaseConfig";
+import { db } from "../../../firebase/firebaseConfig";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface ClientData {

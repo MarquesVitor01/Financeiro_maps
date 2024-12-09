@@ -76,30 +76,15 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
     setFormattedDocument(tipoDocumento === "CPF" ? form?.cpf || '' : form?.cnpj || '');
   }, [tipoDocumento, form]);
 
-  const formatCNPJ = (value: string) => {
-    return value.replace(/\D/g, '')
-      .replace(/(\d{2})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1/$2')
-      .replace(/(\d{4})(\d{1,2})$/, '$1-$2');
-  };
-
-  const formatCPF = (value: string) => {
-    return value.replace(/\D/g, '')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-  };
-
   const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     let formattedValue = value;
   
     // Formatação para CPF ou CNPJ
     if (name === "cpf" || name === "cnpj") {
-      const maxLength = name === "cpf" ? 14 : 18;
+      const maxLength = name === "cpf" ? 11 : 14;
       const trimmedValue = value.slice(0, maxLength);
-      formattedValue = name === "cpf" ? formatCPF(trimmedValue) : formatCNPJ(trimmedValue);
+      formattedValue = name === "cpf" ? (trimmedValue) : (trimmedValue);
       setFormattedDocument(formattedValue);
     }
 

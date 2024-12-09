@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import { Operador } from "./Components/Operador";
 import { DadosEmpresa } from "./Components/Empresa";
 import { Navigate } from "react-router-dom";
-import { auth, db } from "../../firebaseConfig";
-import { runTransaction, doc, updateDoc, setDoc, getDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase/firebaseConfig";
+import {
+  runTransaction,
+  doc,
+  updateDoc,
+  setDoc,
+  getDoc,
+} from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Components/Styles/add.css";
@@ -21,7 +27,7 @@ export const Add = () => {
     createdBy: userId,
     setor: cargo,
     equipe: "G MARKETING DIGITAL",
-    account: "equipe_marcio",
+    account: "",
     razaoSocial: "",
     cpf: "",
     cnpj: "",
@@ -42,8 +48,9 @@ export const Add = () => {
     responsavel: "",
     cargo: "",
     valorVenda: "",
-    contrato: "",
     parcelas: "1",
+    valorParcelado: "",
+    contrato: "",
     formaPagamento: "",
     qrcodeText: "",
     renovacaoAutomatica: "",
@@ -52,6 +59,7 @@ export const Add = () => {
     ctdigital: "",
     logotipo: "",
     anuncio: "",
+    grupo: "",
   });
 
   const [step, setStep] = useState(0);
@@ -66,47 +74,45 @@ export const Add = () => {
     >
   ) => {
     const { name, value } = e.target;
-    if (name === "email1" || name === "email2") {
-      const emailWithoutSpaces = value.replace(/\s+/g, "");
-      setForm((prev) => ({
-        ...prev,
-        [name]: emailWithoutSpaces,
-      }));
-    }
-    else if (name === "celular" || name === "whatsapp") {
-      const numericValue = value.replace(/\D/g, "");
 
-      if (numericValue.length <= 11) {
-        setForm((prev) => ({
-          ...prev,
-          [name]: numericValue,
-        }));
+    setForm((prev) => {
+      const updatedForm = { ...prev, [name]: value };
+  
+      if (name === "valorVenda" || name === "parcelas") {
+        const valorVenda = parseFloat(
+          name === "valorVenda" ? value : prev.valorVenda || "0"
+        );
+        const parcelas = parseInt(
+          name === "parcelas" ? value : prev.parcelas || "1"
+        );
+  
+        if (!isNaN(valorVenda) && parcelas > 0) {
+          if (parcelas === 1) {
+            updatedForm.valorParcelado = Math.round(valorVenda).toString();
+          } else {
+            updatedForm.valorParcelado = Math.round(valorVenda / parcelas).toString();
+          }
+        }
       }
-    }
-    else if (name === "fixo") {
-      const numericValue = value.replace(/\D/g, "");
+      if (name === "email1" || name === "email2") {
+        updatedForm[name] = value.replace(/\s+/g, "");
+      }
 
-      if (numericValue.length <= 10) {
-        setForm((prev) => ({
-          ...prev,
-          [name]: numericValue,
-        }));
+      if (name === "celular" || name === "whatsapp") {
+        updatedForm[name] = value.replace(/\D/g, "").slice(0, 13);
       }
-    }
-    else if ((name === "cnpj" || name === "cpf") && value.length >= 6) {
-      setForm((prev) => ({
-        ...prev,
-        [name]: value,
-        numeroContrato: value.slice(0, 6),
-      }));
-    } else {
-      setForm((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+
+      if (name === "fixo") {
+        updatedForm[name] = value.replace(/\D/g, "").slice(0, 10);
+      }
+
+      if ((name === "cpf" || name === "cnpj") && value.length >= 6) {
+        updatedForm.numeroContrato = value.slice(0, 6);
+      }
+
+      return updatedForm;
+    });
   };
-
 
   const handleSelectChange = (selectedOption: any) => {
     setForm({ ...form, operador: selectedOption.value });
@@ -124,35 +130,42 @@ export const Add = () => {
     window.history.back();
   };
 
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+  
     try {
       const clienteRef = doc(db, "vendas", form.numeroContrato);
-
-      await runTransaction(db, async (transaction) => {
-        const docSnap = await transaction.get(clienteRef);
-        if (docSnap.exists()) {
-          transaction.update(clienteRef, { ...form });
+      const docSnap = await getDoc(clienteRef);
+  
+      if (docSnap.exists()) {
+        const userConfirmed = window.confirm(
+          `O número de contrato ${form.numeroContrato} já existe. Deseja salvar o cliente com um novo ID?`
+        );
+  
+        if (userConfirmed) {
+          const novoId = `${form.numeroContrato}_${Date.now()}`; // Cria um novo ID único
+          const novoClienteRef = doc(db, "vendas", novoId);
+          await setDoc(novoClienteRef, form);
+          toast.success("Cliente salvo com um novo ID!");
         } else {
-          transaction.set(clienteRef, form);
+          toast.info("Ação cancelada pelo usuário.");
         }
-      });
-
-      toast.success("Cliente salvo com sucesso!");
+      } else {
+        await setDoc(clienteRef, form);
+        toast.success("Cliente salvo com sucesso!");
+      }
+  
       setRedirect(true);
     } catch (error) {
       console.error("Erro ao salvar cliente:", error);
+      setError("Erro ao salvar cliente. Tente novamente.");
     } finally {
       setLoading(false);
     }
   };
-
-
+  
 
   if (redirect) {
     return <Navigate to={"/vendas"} />;

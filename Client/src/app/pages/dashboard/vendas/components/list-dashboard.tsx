@@ -15,7 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
-import { db } from "../../../../firebaseConfig";
+import { db } from "../../../../firebase/firebaseConfig";
 import {
   collection,
   getDocs,
@@ -41,6 +41,7 @@ interface Venda {
   contrato: string;
   createdBy: string;
   setor: string;
+  grupo: string;
 }
 
 interface ListDashboardProps {
@@ -64,6 +65,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
     dueDate: "",
     saleType: "",
     salesPerson: "",
+    saleGroup: ""
   });
 
   const auth = getAuth();
@@ -146,10 +148,10 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
           venda.responsavel.toLowerCase().includes(lowerCaseTerm)) ||
         (venda.email1 && venda.email1.toLowerCase().includes(lowerCaseTerm)) ||
         (venda.email2 && venda.email2.toLowerCase().includes(lowerCaseTerm)) ||
-        (venda.operador &&
-          venda.operador.toLowerCase().includes(lowerCaseTerm));
+        (venda.operador && venda.operador.toLowerCase().includes(lowerCaseTerm));
+        (venda.grupo && venda.grupo.toLowerCase().includes(lowerCaseTerm));
 
-      const { startDate, endDate, dueDate, saleType, salesPerson } = filters;
+      const { startDate, endDate, dueDate, saleType, salesPerson, saleGroup } = filters;
 
       const vendaData = new Date(venda.data);
       const isStartDateValid = startDate
@@ -168,16 +170,16 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
         : true;
 
       const isSaleTypeValid = saleType ? venda.contrato === saleType : true;
-      const isSalesPersonValid = salesPerson
-        ? venda.operador === salesPerson
-        : true;
+      const isSalesPersonValid = salesPerson ? venda.operador === salesPerson : true;
 
+      const isGroupTypeValid = saleGroup ? venda.grupo === saleGroup : true;
       return (
         matchesSearchTerm &&
         isDateInRange &&
         isDueDateValid &&
         isSaleTypeValid &&
-        isSalesPersonValid
+        isSalesPersonValid && 
+        isGroupTypeValid
       );
     });
 
@@ -228,6 +230,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       "data",
       "validade",
       "dataVencimento",
+      "grupo"
     ];
 
     const filteredData = clientsToDownload.map((venda) => {
@@ -375,6 +378,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Operador</th>
+                <th>Grupo</th>
                 <th></th>
               </tr>
             </thead>
@@ -404,6 +408,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                   </td>
                   <td className={selectedItems.has(venda.id) ? "selected" : ""}>
                     {venda.operador.replace(/\./g, " ")}
+                  </td>
+                  <td className={selectedItems.has(venda.id) ? "selected" : ""}>
+                    {venda.grupo}
                   </td>
 
                   <td className="icon-container">

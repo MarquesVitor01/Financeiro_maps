@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { doc, getDoc, setDoc, collection, getDocs, updateDoc } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+import { db } from "../../firebase/firebaseConfig";
 import HeaderPerfil from "./Components/HeaderPerfil";
 import InfoPerfil from "./Components/InfoPerfil";
 import ModalEditarFoto from "./Components/ModalEditarFoto";

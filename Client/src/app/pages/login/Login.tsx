@@ -1,6 +1,6 @@
 import { useState, FormEvent, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../../firebaseConfig';
+import { auth } from '../../firebase/firebaseConfig';
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import '../login/components/login.css';
 import './Login.css';

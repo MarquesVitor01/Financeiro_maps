@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { storage } from "../../../firebaseConfig"; 
+import { storage } from "../../../firebase/firebaseConfig"; 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; 
 import "./modal.css";
 

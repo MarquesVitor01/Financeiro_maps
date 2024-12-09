@@ -22,6 +22,10 @@
       {
         "src": "/v1/charge(.*)",
         "dest": "/index.js"
+      },
+      {
+        "src": "/sync-marketing(.*)",
+        "dest": "/index.js"
       }
     ]
   }

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { auth, db } from '../firebaseConfig';
+import { auth, db } from '../firebase/firebaseConfig';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { browserSessionPersistence } from 'firebase/auth';
 
@@ -8,7 +8,7 @@ interface AuthContextType {
   nome: string;
   avatar: string;
   cargo: string;
-  userId: string; // Adicionando userId
+  userId: string; 
   loading: boolean;
   logout: () => Promise<void>;
 }

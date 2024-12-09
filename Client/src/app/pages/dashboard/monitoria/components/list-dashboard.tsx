@@ -14,7 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
-import { db } from "../../../../firebaseConfig";
+import { db } from "../../../../firebase/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { Tooltip } from "react-tooltip";
 

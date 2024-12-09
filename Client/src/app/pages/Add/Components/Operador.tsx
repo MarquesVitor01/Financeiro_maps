@@ -1,5 +1,5 @@
 // Operador.tsx
-import React from 'react';
+import React from "react";
 interface OperadorProps {
   form: {
     numeroContrato: string;
@@ -13,8 +13,11 @@ interface OperadorProps {
     contrato: string;
     formaPagamento: string;
     account: string;
+    grupo: string;
   };
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
   handleSelectChange: (selectedOption: any) => void;
   operadoresOpcoes: { value: string; label: string }[];
 }
@@ -24,9 +27,7 @@ export const Operador: React.FC<OperadorProps> = ({
   handleInputChange,
 }) => {
   const formatValor = (value: string): string => {
-    return value
-      .replace(/\D/g, '') 
-      .replace(/(\d)(\d{2})$/, '$1,$2'); 
+    return value.replace(/\D/g, "").replace(/(\d)(\d{2})$/, "$1,$2");
   };
 
   const handleDocumentChange = (
@@ -38,7 +39,7 @@ export const Operador: React.FC<OperadorProps> = ({
     if (name === "valorVenda") {
       formattedValue = formatValor(value);
       handleInputChange({
-        target: { name, value: value.replace(/\D/g, "") }, 
+        target: { name, value: value.replace(/\D/g, "") },
       } as React.ChangeEvent<HTMLInputElement>);
     }
   };
@@ -55,7 +56,7 @@ export const Operador: React.FC<OperadorProps> = ({
           name="numeroContrato"
           value={form.numeroContrato}
           onChange={handleInputChange}
-          placeholder='Inserido de forma automática a partir do cnpj/cpf'
+          placeholder="Inserido de forma automática a partir do cnpj/cpf"
           readOnly
         />
       </div>
@@ -68,7 +69,7 @@ export const Operador: React.FC<OperadorProps> = ({
           name="valorVenda"
           value={form.valorVenda ? formatValor(form.valorVenda) : ""}
           onChange={handleDocumentChange}
-          placeholder='Insira o valor da venda'
+          placeholder="Insira o valor da venda"
         />
       </div>
       <div className="form-group mb-3 col-md-4">
@@ -147,7 +148,7 @@ export const Operador: React.FC<OperadorProps> = ({
       </div>
 
       <div className="form-group mb-3 col-md-4">
-        <label htmlFor="equipe">Grupo</label>
+        <label htmlFor="equipe">Equipe</label>
         <input
           type="text"
           className="form-control"
@@ -175,6 +176,23 @@ export const Operador: React.FC<OperadorProps> = ({
           <option value="equipe_antony">Equipe do Antony</option>
         </select>
       </div> */}
+
+      <div className="form-group mb-3 col-md-4">
+        <label htmlFor="account">Grupo</label>
+        <select
+          className="form-control"
+          id="account"
+          name="account"
+          value={form.account}
+          onChange={handleInputChange}
+        >
+          <option value="">Selecione uma opção</option>
+          <option value="equipe_marcio">Equipe do Márcio/Kaio</option>
+          <option value="equipe_antony">Equipe do Antony</option>
+          <option value="equipe_alef">Equipe do Alef</option>
+        </select>
+      </div>
+
       <div className="form-group mb-3 col-md-4">
         <label htmlFor="validade">Válido por</label>
         <select
