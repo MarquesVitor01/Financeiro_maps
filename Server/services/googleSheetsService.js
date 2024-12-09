@@ -1,10 +1,24 @@
 const { google } = require("googleapis");
-const path = require("path");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
 
 const auth = new google.auth.GoogleAuth({
-  keyFile: path.join(__dirname, "../certs/credenciais/crm-maps-593d1-0a3f3365aa19.json"),
+  credentials: {
+    type: process.env.TYPE_1,
+    project_id: process.env.PROJECT_ID_1,
+    private_key_id: process.env.PRIVATE_KEY_ID_1,
+    private_key: process.env.PRIVATE_KEY_1,
+    client_email: process.env.CLIENT_EMAIL_1,
+    client_id: process.env.CLIENT_ID_1,
+    auth_uri: process.env.AUTH_URI_1,
+    token_uri: process.env.SERVICE_TOKEN_URI_1,
+    auth_provider_x509_cert_url: process.env.AUTH_PROVIDER_X509_CERT_URL_1,
+    client_x509_cert_url: process.env.CLIENT_X509_CERT_URL_1,
+    universe_domain: process.env.UNIVERSE_DOMAIN_1
+  },
   scopes: SCOPES,
 });
 
