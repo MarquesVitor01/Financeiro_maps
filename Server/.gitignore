@@ -19,6 +19,8 @@ config.json
 
 Server/certs/credenciais/*.json
 
+Server/certs/credenciais/
+
 # misc
 .DS_Store
 .env.local
