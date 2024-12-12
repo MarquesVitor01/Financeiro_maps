@@ -307,6 +307,11 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
 
       setMarketings(marketingsList);
       setTotalMarketings(marketingsList.length);
+
+      await fetch("https://crm-plataform-app-6t3u.vercel.app/sync-marketing", {
+        method: "POST",
+      });
+      
       toast.success("Sincronização concluída!");
     } catch (error) {
       console.error("Erro ao sincronizar clientes:", error);

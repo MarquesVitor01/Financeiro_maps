@@ -91,7 +91,7 @@ export const FichaBoleto: React.FC = () => {
               },
             ],
             // shippingValue: 100,
-            account: clientData.account,
+            account: "equipe_marcio",
             dataVencimento: vencimento.toISOString().split("T")[0], // Incluindo a data de vencimento na requisição
           }),
         });
@@ -141,7 +141,7 @@ export const FichaBoleto: React.FC = () => {
 
       // Requisição para buscar os detalhes do boleto
       const response = await fetch(
-        `http://localhost:5000/v1/charge/${chargeId}?account=${clientData.account}`,
+        `https://crm-plataform-app-6t3u.vercel.app/v1/charge/${chargeId}?account=${clientData.account}`,
         {
           method: "GET",
           headers: {
@@ -219,7 +219,7 @@ export const FichaBoleto: React.FC = () => {
                       className="btn btn-primary"
                       onClick={() =>
                         generateBoletos(
-                          `http://localhost:5000/generate-boleto-${type.toLowerCase()}`,
+                          `https://crm-plataform-app-6t3u.vercel.app/generate-boleto-${type.toLowerCase()}`,
                           idx === 0
                         )
                       }
