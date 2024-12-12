@@ -24,12 +24,13 @@ const checkForChanges = async () => {
   }
 };
 
-cron.schedule("0 */3 * * *", async () => {
+cron.schedule("* * * * *", async () => {
   try {
     await checkForChanges();
   } catch (error) {
     console.error("Erro ao sincronizar os dados:", error);
   }
 });
+
 
 module.exports = { checkForChanges };
