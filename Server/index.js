@@ -26,23 +26,23 @@ app.use("/v1/charge", chargeRoutes);
 app.use("/sync-marketing", syncMarketing);
 
 
-const atualizarPlanilha = async () => {
-  try {
-    const response = await fetch("https://grupomapscartaodigital.com.br/sync-marketing", {
-      method: "POST",
-    });
-    const mensagem = await response.text();
-    console.log(mensagem);
-  } catch (error) {
-    console.error("Erro ao forçar atualização:", error);
-  }
-};
+// const atualizarPlanilha = async () => {
+//   try {
+//     const response = await fetch("http://localhost:5000/sync-marketing", {
+//       method: "POST",
+//     });
+//     const mensagem = await response.text();
+//     console.log(mensagem);
+//   } catch (error) {
+//     console.error("Erro ao forçar atualização:", error);
+//   }
+// };
 
-atualizarPlanilha()
+// atualizarPlanilha()
 // Exporte como função para a Vercel
 module.exports = app;
 
 
-// app.listen(port, () => {
-//   console.log(`Server running on http://localhost:${port}`);
-// });
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
