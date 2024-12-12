@@ -308,7 +308,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       setMarketings(marketingsList);
       setTotalMarketings(marketingsList.length);
 
-      await fetch("https://crm-plataform-app-6t3u.vercel.app/sync-marketing", {
+      await fetch("http://localhost:5000/sync-marketing", {
         method: "POST",
       });
       

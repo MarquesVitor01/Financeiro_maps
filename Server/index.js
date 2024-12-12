@@ -13,8 +13,8 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "https://grupomapscartaodigital.com.br",
-  // origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  // origin: process.env.FRONTEND_URL || "https://grupomapscartaodigital.com.br",
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
 }));
 app.use(bodyParser.json());
 app.use(express.json());
@@ -28,7 +28,7 @@ app.use("/sync-marketing", syncMarketing);
 
 // const atualizarPlanilha = async () => {
 //   try {
-//     const response = await fetch("https://grupomapscartaodigital.com.br/sync-marketing", {
+//     const response = await fetch("http://localhost:5000/sync-marketing", {
 //       method: "POST",
 //     });
 //     const mensagem = await response.text();
