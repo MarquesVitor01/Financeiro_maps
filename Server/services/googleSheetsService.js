@@ -57,6 +57,7 @@ const writeToSheet = async (data) => {
         row.contrato,
         row.nomeMonitor,
         row.artLink,
+        row.contratoLink,
         row.celular,
         row.anuncio ? "Sim" : "Não",
         row.monitoriaConcluidaYes ? "Sim" : "Não",

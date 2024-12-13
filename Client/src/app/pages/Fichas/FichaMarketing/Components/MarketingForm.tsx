@@ -7,6 +7,7 @@ interface MarketingForm {
   responsible: string;
   completionDate: string;
   servicosConcluidos: boolean;
+  contratoLink: string;
 }
 
 interface MarketingFormProps {
@@ -20,6 +21,7 @@ export const MarketingForm: React.FC<MarketingFormProps> = ({ form: initialForm,
     creationOrUpdate: 'Criação',
     responsible: '',
     completionDate: '',
+    contratoLink: '',
     servicosConcluidos: false,
   });
 
@@ -46,6 +48,19 @@ export const MarketingForm: React.FC<MarketingFormProps> = ({ form: initialForm,
   return (
     <form className="card p-4 mb-4" onSubmit={handleSubmit}>
       <h2 className='text-center'>Informações de Marketing</h2>
+
+      <div className="form-group mb-3">
+        <label htmlFor="contratoLink">Link do Contrato:</label>
+        <input
+          type="text"
+          id="contratoLink"
+          className="form-control"
+          name="contratoLink"
+          value={form.contratoLink}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
 
       <div className="form-group mb-3">
         <label htmlFor="artLink">Link da Arte Personalizada:</label>
