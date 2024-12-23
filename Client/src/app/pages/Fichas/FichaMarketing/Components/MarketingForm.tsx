@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
+import React, { useState, useEffect } from "react";
+import { QRCodeSVG } from "qrcode.react";
 
 interface MarketingForm {
   artLink: string;
@@ -8,21 +8,27 @@ interface MarketingForm {
   completionDate: string;
   servicosConcluidos: boolean;
   contratoLink: string;
+  linkGoogle: string;
 }
+
 
 interface MarketingFormProps {
   form: MarketingForm | null;
   onSubmit: (data: MarketingForm) => void;
 }
 
-export const MarketingForm: React.FC<MarketingFormProps> = ({ form: initialForm, onSubmit }) => {
+export const MarketingForm: React.FC<MarketingFormProps> = ({
+  form: initialForm,
+  onSubmit,
+}) => {
   const [form, setForm] = useState<MarketingForm>({
-    artLink: '',
-    creationOrUpdate: 'Criação',
-    responsible: '',
-    completionDate: '',
-    contratoLink: '',
+    artLink: "",
+    creationOrUpdate: "Criação",
+    responsible: "",
+    completionDate: "",
+    contratoLink: "",
     servicosConcluidos: false,
+    linkGoogle: ""
   });
 
   useEffect(() => {
@@ -31,12 +37,15 @@ export const MarketingForm: React.FC<MarketingFormProps> = ({ form: initialForm,
     }
   }, [initialForm]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value, type } = e.target;
-    const checked = type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
+    const checked =
+      type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
     setForm((prevForm) => ({
       ...prevForm,
-      [name]: type === 'checkbox' ? checked : value, 
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -47,9 +56,9 @@ export const MarketingForm: React.FC<MarketingFormProps> = ({ form: initialForm,
 
   return (
     <form className="card p-4 mb-4" onSubmit={handleSubmit}>
-      <h2 className='text-center'>Informações de Marketing</h2>
+      <h2 className="text-center">Informações de Marketing</h2>
 
-      <div className="form-group mb-3">
+      {/* <div className="form-group mb-3">
         <label htmlFor="contratoLink">Link do Contrato:</label>
         <input
           type="text"
@@ -60,7 +69,7 @@ export const MarketingForm: React.FC<MarketingFormProps> = ({ form: initialForm,
           onChange={handleInputChange}
           required
         />
-      </div>
+      </div> */}
 
       <div className="form-group mb-3">
         <label htmlFor="artLink">Link da Arte Personalizada:</label>
@@ -114,6 +123,25 @@ export const MarketingForm: React.FC<MarketingFormProps> = ({ form: initialForm,
           required
         />
       </div>
+      <div className="form-group mb-3">
+        <label htmlFor="linkGoogle">Link da Página do Google:</label>
+        <input
+          type="text"
+          id="linkGoogle"
+          className="form-control"
+          name="linkGoogle"
+          value={form.linkGoogle}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+
+      {form.linkGoogle && (
+        <div className="mt-3 justify-content-center d-flex flex-column align-items-center">
+          <h5>QR Code:</h5>
+          <QRCodeSVG value={form.linkGoogle} size={128} />
+        </div>
+      )}
 
       <label>Serviços Concluídos?</label>
       <div className="form-check">
@@ -121,14 +149,18 @@ export const MarketingForm: React.FC<MarketingFormProps> = ({ form: initialForm,
           className="form-check-input"
           type="checkbox"
           id="servicosConcluidos"
-          name="servicosConcluidos" 
+          name="servicosConcluidos"
           checked={form.servicosConcluidos}
           onChange={handleInputChange}
         />
-        <label className="form-check-label" htmlFor="servicosConcluidos">Sim</label>
+        <label className="form-check-label" htmlFor="servicosConcluidos">
+          Sim
+        </label>
       </div>
 
-      <button type="submit" className="btn btn-primary">Salvar</button>
+      <button type="submit" className="btn btn-primary">
+        Salvar
+      </button>
     </form>
   );
 };

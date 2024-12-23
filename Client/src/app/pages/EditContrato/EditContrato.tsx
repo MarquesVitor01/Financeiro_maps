@@ -47,6 +47,7 @@ interface ClientData {
   anuncio: string;
   valorParcelado: string;
   grupo: string;
+  account: string;
 }
 
 export const EditContrato = () => {

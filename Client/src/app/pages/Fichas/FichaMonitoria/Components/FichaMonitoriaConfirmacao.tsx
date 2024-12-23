@@ -1,10 +1,9 @@
 import React from "react";
-import { QRCodeSVG } from 'qrcode.react';
-
+import { QRCodeSVG } from "qrcode.react";
 
 interface InfoConfirmacao {
   monitoriaConcluidaYes: boolean;
-  monitoriaConcluidaNo: boolean
+  monitoriaConcluidaNo: boolean;
   nomeMonitor: string;
   qrcodeText: string;
 }
@@ -24,10 +23,10 @@ const questions = [
   },
 ];
 
-
-
-
-export const FichaMonitoriaConfirmacao: React.FC<InfoConfirmacaoProps> = ({ form, handleInputChange }) => {
+export const FichaMonitoriaConfirmacao: React.FC<InfoConfirmacaoProps> = ({
+  form,
+  handleInputChange,
+}) => {
   if (!form) return null;
 
   return (
@@ -45,7 +44,9 @@ export const FichaMonitoriaConfirmacao: React.FC<InfoConfirmacaoProps> = ({ form
                 checked={yesChecked(form)}
                 onChange={handleInputChange}
               />
-              <label className="form-check-label" htmlFor={yesId}>Sim</label>
+              <label className="form-check-label" htmlFor={yesId}>
+                Sim
+              </label>
             </div>
             <div className="form-check">
               <input
@@ -55,11 +56,11 @@ export const FichaMonitoriaConfirmacao: React.FC<InfoConfirmacaoProps> = ({ form
                 checked={noChecked(form)}
                 onChange={handleInputChange}
               />
-              <label className="form-check-label" htmlFor={noId}>Não</label>
+              <label className="form-check-label" htmlFor={noId}>
+                Não
+              </label>
             </div>
           </div>
-
-
         ))}
         <div className="col-md-6 box-quest">
           <label>Informe seu nome:</label>
@@ -84,11 +85,11 @@ export const FichaMonitoriaConfirmacao: React.FC<InfoConfirmacaoProps> = ({ form
           />
         </div>
         {form.qrcodeText && (
-        <div className="mt-3 justify-content-center d-flex flex-column align-items-center">
-          <h5>QR Code:</h5>
-          <QRCodeSVG value={form.qrcodeText} size={128} />
-        </div>
-      )}
+          <div className="mt-3 justify-content-center d-flex flex-column align-items-center">
+            <h5>QR Code:</h5>
+            <QRCodeSVG value={form.qrcodeText} size={128} />
+          </div>
+        )}
       </div>
     </>
   );

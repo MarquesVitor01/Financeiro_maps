@@ -41,7 +41,7 @@ interface Venda {
   contrato: string;
   createdBy: string;
   setor: string;
-  grupo: string;
+  account: string;
 }
 
 interface ListDashboardProps {
@@ -149,7 +149,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
         (venda.email1 && venda.email1.toLowerCase().includes(lowerCaseTerm)) ||
         (venda.email2 && venda.email2.toLowerCase().includes(lowerCaseTerm)) ||
         (venda.operador && venda.operador.toLowerCase().includes(lowerCaseTerm));
-        (venda.grupo && venda.grupo.toLowerCase().includes(lowerCaseTerm));
+        (venda.account && venda.account.toLowerCase().includes(lowerCaseTerm));
 
       const { startDate, endDate, dueDate, saleType, salesPerson, saleGroup } = filters;
 
@@ -172,7 +172,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       const isSaleTypeValid = saleType ? venda.contrato === saleType : true;
       const isSalesPersonValid = salesPerson ? venda.operador === salesPerson : true;
 
-      const isGroupTypeValid = saleGroup ? venda.grupo === saleGroup : true;
+      const isGroupTypeValid = saleGroup ? venda.account === saleGroup : true;
       return (
         matchesSearchTerm &&
         isDateInRange &&
@@ -230,7 +230,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       "data",
       "validade",
       "dataVencimento",
-      "grupo"
+      "account",
+      "rePagamento",
+      "valorPago",
     ];
 
     const filteredData = clientsToDownload.map((venda) => {
@@ -410,7 +412,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                     {venda.operador.replace(/\./g, " ")}
                   </td>
                   <td className={selectedItems.has(venda.id) ? "selected" : ""}>
-                    {venda.grupo}
+                    {venda.account}
                   </td>
 
                   <td className="icon-container">

@@ -13,6 +13,7 @@ interface VendaData {
   parcelas: string;
   valorParcelado: string;
   grupo: string;
+  account: string;
 }
 
 interface EditOperadorProps {
@@ -217,13 +218,13 @@ export const EditOperador: React.FC<EditOperadorProps> = ({
         readOnly
       />
       <SelectField
-        id="grupo"
+        id="account"
         label="Grupo"
-        name="grupo"
-        value={form.grupo}
+        name="account"
+        value={form.account}
         onChange={handleInputChange}
         options={[
-          { value: "equipe_marcio_kaio", label: "Equipe do Márcio/Kaio" },
+          { value: "equipe_marcio", label: "Equipe do Márcio/Kaio" },
           { value: "equipe_antony", label: "Equipe do Antony" },
           { value: "equipe_alef", label: "Equipe do Alef" },
         ]}

@@ -16,12 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
 import { db } from "../../../../firebase/firebaseConfig";
-import {
-  collection,
-  getDocs,
-  doc,
-  writeBatch,
-} from "firebase/firestore";
+import { collection, getDocs, doc, writeBatch } from "firebase/firestore";
 import { toast, ToastContainer } from "react-toastify";
 import * as XLSX from "xlsx";
 import { Tooltip } from "react-tooltip";
@@ -42,6 +37,7 @@ interface Marketing {
   servicosConcluidos: boolean;
   encaminharCliente: string;
   rePagamento: string;
+  account: string;
 }
 
 interface Sale {
@@ -60,6 +56,8 @@ interface Sale {
   rePagamento: string;
   dataPagamento: string;
   operadorSelecionado: { value: string; label: string } | null;
+  account: string;
+  valorPago: string
 }
 
 interface ListDashboardProps {
@@ -89,6 +87,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
     dueDate: "",
     saleType: "",
     salesPerson: "",
+    saleGroup: "",
   });
 
   const [showCancelados, setShowCancelados] = useState(false);
@@ -151,8 +150,11 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
           marketing.email2.toLowerCase().includes(lowerCaseTerm)) ||
         (marketing.operador &&
           marketing.operador.toLowerCase().includes(lowerCaseTerm));
+      marketing.account &&
+        marketing.account.toLowerCase().includes(lowerCaseTerm);
 
-      const { startDate, endDate, dueDate, saleType, salesPerson } = filters;
+      const { startDate, endDate, dueDate, saleType, salesPerson, saleGroup } =
+        filters;
 
       const marketingData = new Date(marketing.data);
       const isStartDateValid = startDate
@@ -175,13 +177,16 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       const isSalesPersonValid = salesPerson
         ? marketing.operador === salesPerson
         : true;
-
+      const isGroupTypeValid = saleGroup
+        ? marketing.account === saleGroup
+        : true;
       return (
         matchesSearchTerm &&
         isDateInRange &&
         isDueDateValid &&
         isSaleTypeValid &&
-        isSalesPersonValid
+        isSalesPersonValid &&
+        isGroupTypeValid
       );
     });
     if (showCancelados) {
@@ -271,6 +276,8 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       "dataPagamento",
       "encaminharCliente",
       "operadorSelecionado",
+      "account",
+      "valorPago"
     ];
 
     const filteredData = clientsToDownload.map((financeiro) => {
@@ -465,7 +472,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                 <th>CNPJ/CPF</th>
                 <th>Nome</th>
                 <th>Email</th>
+                <th>Equipe</th>
                 <th>Operador</th>
+                <th>Valor</th>
                 <th></th>
               </tr>
             </thead>
@@ -515,6 +524,17 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                         : ""
                     }`}
                   >
+                    {marketing.account}
+                  </td>
+                  <td
+                    className={`${
+                      selectedItems.has(marketing.id) ? "selected" : ""
+                    } ${
+                      marketing.encaminharCliente === "sim"
+                        ? "cobranca-encaminhado"
+                        : ""
+                    }`}
+                  >
                     {marketing.operador.replace(/\./g, " ")}
                   </td>
                   <td className="icon-container">
@@ -541,8 +561,16 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                   </td>
 
                   {/* Tooltip */}
-                  <Tooltip id="tooltip-eye" place="top" className="custom-tooltip" />
-                  <Tooltip id="tooltip-financeiro" place="top" className="custom-tooltip" />
+                  <Tooltip
+                    id="tooltip-eye"
+                    place="top"
+                    className="custom-tooltip"
+                  />
+                  <Tooltip
+                    id="tooltip-financeiro"
+                    place="top"
+                    className="custom-tooltip"
+                  />
                 </tr>
               ))}
             </tbody>

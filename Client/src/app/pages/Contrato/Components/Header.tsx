@@ -52,18 +52,21 @@ export const Header: React.FC = () => {
             <p><strong>CONTRATO Nº:</strong> {clientData.numeroContrato}</p>
           </div>
           <div className="col-md-4">
-            <p><strong>DATA:</strong> {formatDateToBrazilian(clientData.data)}</p>
+            <p><strong>DATA DE ADESÃO:</strong> {formatDateToBrazilian(clientData.data)} </p>
           </div>
           <div className="col-md-4">
             <p><strong>OPERADOR:</strong> {clientData.operador}</p>
           </div>
         </div>
         <div className="row mb-3">
-          <div className="col">
+          <div className="col-md-4">
             <strong>EQUIPE:</strong> {clientData.equipe}
           </div>
-          <div className="col">
-            <strong>Plano:</strong> {clientData.validade}
+          <div className="col-md-4">
+          <strong>VÁLIDO POR UM ANO</strong>
+          </div>
+          <div className="col-md-4">
+            <strong>PLANO:</strong> {clientData.validade}
           </div>
         </div>
       </div>

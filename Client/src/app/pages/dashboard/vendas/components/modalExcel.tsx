@@ -39,7 +39,7 @@ export const ModalExcel: React.FC<ModalExcelProps> = ({ onClose, onApplyFilters 
   ];
   
   const tipoGrupoOptions: Option[] = [
-    { value: 'equipe_marcio_kaio', label: 'Equipe Márcio/Kaio' },
+    { value: 'equipe_marcio', label: 'Equipe Márcio/Kaio' },
     { value: 'equipe_antony', label: 'Equipe do Antony' },
     { value: 'equipe_alef', label: 'Equipe do Alef' }
   ];
@@ -81,7 +81,7 @@ export const ModalExcel: React.FC<ModalExcelProps> = ({ onClose, onApplyFilters 
 
   const handleApplyFilters = () => {
     const filters = { startDate, endDate, dueDate, saleType, salesPerson, saleGroup, sorting };
-    localStorage.setItem("excelFilters", JSON.stringify(filters)); // Salva os filtros
+    localStorage.setItem("excelFilters", JSON.stringify(filters)); 
     onApplyFilters(filters);
     onClose();
   };
