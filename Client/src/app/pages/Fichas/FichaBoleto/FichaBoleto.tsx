@@ -141,7 +141,7 @@ export const FichaBoleto: React.FC = () => {
 
       // Requisição para buscar os detalhes do boleto
       const response = await fetch(
-        `https://crm-plataform-app-6t3u.vercel.app/v1/charge/${chargeId}?account=${clientData.account}`,
+        `http://localhost:5000/v1/charge/${chargeId}?account=${clientData.account}`,
         {
           method: "GET",
           headers: {
@@ -219,7 +219,7 @@ export const FichaBoleto: React.FC = () => {
                       className="btn btn-primary"
                       onClick={() =>
                         generateBoletos(
-                          `https://crm-plataform-app-6t3u.vercel.app/generate-boleto-${type.toLowerCase()}`,
+                          `http://localhost:5000/generate-boleto-${type.toLowerCase()}`,
                           idx === 0
                         )
                       }
