@@ -64,3 +64,11 @@
   width: 600px;
   font-size: 12px;
 }
+
+.upper p{
+  text-transform: uppercase!important;
+}
+
+.upper-span span{
+  text-transform: uppercase!important;
+}

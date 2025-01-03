@@ -16,7 +16,7 @@ export const DadosEmpresa: React.FC = () => {
       .replace(/(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5")
       .substring(0, 18);
   };
-  
+
   const formatCPF = (value: string): string => {
     return value
       .replace(/\D/g, "")
@@ -28,10 +28,10 @@ export const DadosEmpresa: React.FC = () => {
 
   const formatCelular = (value: string): string => {
     return value
-      .replace(/\D/g, "") 
-      .replace(/^(\d{2})(\d)/, "($1) $2") 
-      .replace(/(\d{5})(\d{5})$/, "$1-$2") 
-      .substring(0, 15); 
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{5})(\d{5})$/, "$1-$2")
+      .substring(0, 15);
   };
 
   const formatFixo = (value: string): string => {
@@ -65,12 +65,12 @@ export const DadosEmpresa: React.FC = () => {
 
   return (
     clientData && (
-      <div className="dados-empresa card p-4 my-1">
+      <div className="dados-empresa card p-4 my-1 upper">
         <h5 className="text-center font-weight-bold">DADOS DA EMPRESA</h5>
         <div className="row">
           <div className="col-md-6 mb-1">
             <div className="p-2 bg-light rounded">
-              <p>
+              <p className="">
                 <strong>RAZÃO SOCIAL:</strong> {clientData.razaoSocial}
               </p>
               <p>
@@ -83,11 +83,16 @@ export const DadosEmpresa: React.FC = () => {
                 <strong>ESTADO:</strong> {clientData.estado}
               </p>
               <p>
-      <strong>CNPJ/CPF:</strong>{" "}
-      {clientData.cnpj ? formatCNPJ(clientData.cnpj) : clientData.cpf ? formatCPF(clientData.cpf) : ""}
-    </p>
+                <strong>CNPJ/CPF:</strong>{" "}
+                {clientData.cnpj
+                  ? formatCNPJ(clientData.cnpj)
+                  : clientData.cpf
+                  ? formatCPF(clientData.cpf)
+                  : ""}
+              </p>
               <p>
-                <strong>ENDEREÇO COMERCIAL:</strong> {clientData.enderecoComercial}
+                <strong>ENDEREÇO COMERCIAL:</strong>{" "}
+                {clientData.enderecoComercial}
               </p>
               <p>
                 <strong>CEP:</strong> {clientData.cep}
@@ -100,13 +105,16 @@ export const DadosEmpresa: React.FC = () => {
           <div className="col-md-6 mb-1">
             <div className="p-2 bg-light rounded">
               <p>
-                <strong>TELEFONE:</strong> { clientData.fixo ? formatFixo(clientData.fixo) : ""}
+                <strong>TELEFONE:</strong>{" "}
+                {clientData.fixo ? formatFixo(clientData.fixo) : ""}
               </p>
               <p>
-                <strong>CELULAR:</strong> { clientData.celular ? formatCelular(clientData.celular) : ""}
+                <strong>CELULAR:</strong>{" "}
+                {clientData.celular ? formatCelular(clientData.celular) : ""}
               </p>
               <p>
-                <strong>WHATSAPP:</strong> { clientData.whatsapp ? formatCelular(clientData.whatsapp) : ""}
+                <strong>WHATSAPP:</strong>{" "}
+                {clientData.whatsapp ? formatCelular(clientData.whatsapp) : ""}
               </p>
               <p>
                 <strong>HORÁRIO DE FUNCIONAMENTO:</strong> {clientData.horario}
@@ -146,12 +154,12 @@ export const DadosEmpresa: React.FC = () => {
                 <p>
                   <strong>CARGO:</strong> {clientData.cargo}
                 </p>
-              </div>  
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="d-flex align-items-center my-3">
+        <div className="d-flex align-items-center my-3 upper-span">
           <div className="flex-grow-1 border-top"></div>
           <span className="mx-5 font-weight-bold">
             RENOVAÇÃO AUTOMÁTICA: {clientData.renovacaoAutomatica}

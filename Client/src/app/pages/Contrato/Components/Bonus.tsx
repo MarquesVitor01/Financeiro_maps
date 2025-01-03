@@ -52,7 +52,7 @@ export const Bonus: React.FC = () => {
   return (
     clientData && (
       <div className="bonus card text-center mt-2">
-        <h5 className="text-white ">BÔNUS</h5>
+        <h5 className="text-white ">CONDIÇÕES DE PAGAMENTO</h5>
         <div className="d-flex justify-content-center my-1">
           {
             clientData.criacao === "sim" &&
@@ -115,7 +115,8 @@ export const Bonus: React.FC = () => {
         <p className="">
           O PAGAMENTO PODE SER FEITO ATRAVÉS DO BOLETO BANCÁRIO OU PIX QR-CODE DISPONÍVEL NO BOLETO, ENVIADO ATRAVÉS DO E-MAIL E WHATSAPP DO CONTRATANTE.
           <br />
-          ACEITE REALIZADO DE FORMA VERBAL; PARA VERIFICAR SUA ADESÃO.
+          <br />
+          ACEITE REALIZADO DE FORMA VERBAL; PARA VERIFICAR SUA ADESÃO
           <br />
           APONTE A CÂMERA DO CELULAR PARA O QRCODE ABAIXO:
         </p>

@@ -40,7 +40,7 @@ export const Header: React.FC = () => {
 
   return (
     clientData && (
-      <div className="header text-center">
+      <div className="header text-center upper">
         <img
           src="/img/logo_contrato_maps.jpg"
           alt="Logo"
@@ -66,7 +66,7 @@ export const Header: React.FC = () => {
           <strong>VÁLIDO POR UM ANO</strong>
           </div>
           <div className="col-md-4">
-            <strong>PLANO:</strong> {clientData.validade}
+            <p><strong>PLANO:</strong> {clientData.validade}</p>
           </div>
         </div>
       </div>
