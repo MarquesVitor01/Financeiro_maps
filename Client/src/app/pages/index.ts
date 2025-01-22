@@ -1,5 +1,5 @@
 export * from './login/Login'
 export * from './home/Home'
-export * from './add/Add'
+export * from './Add/Add'
 export * from './list/listPositive/ListPositive'
 export * from './list/listNegative/ListNegative'

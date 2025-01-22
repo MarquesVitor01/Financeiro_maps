@@ -19,7 +19,7 @@ export const Navbar = () => {
     { to: "/listpositive", icon: faChartLine, label: " Registro de Entrada" },
     { to: "/listnegative", icon: faTachometerAlt, label: " Registro de Despesas" },
     { to: "/marketing", icon: faBullhorn, label: " Dashboards" },
-    { to: "/financeiro", icon: faMoneyBillWave, label: " Lembretes" },
+    { to: "/lembretes", icon: faMoneyBillWave, label: " Lembretes" },
   ];
 
   return (

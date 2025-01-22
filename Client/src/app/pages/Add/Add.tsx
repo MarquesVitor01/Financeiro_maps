@@ -1,45 +1,34 @@
 import { useState } from "react";
 import "./Add.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
 
 interface FormData {
-  valor: string;
+  valor: number; // Alterado para número
   data: string;
   observacoes: string;
-  tipo: string; // Adicionado para armazenar "Positivo" ou "Negativo"
+  tipo: string;
+  categoria: string;
 }
 
 export const Add: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
-    valor: "0,00",
+    valor: 0, // Inicializado como número
     data: "",
     observacoes: "",
-    tipo: "positivo", // Valor inicial
+    tipo: "positivo",
+    categoria: '',
   });
 
   const navigate = useNavigate();
 
-  const formatarValor = (valor: string): string => {
-    const apenasNumeros = valor.replace(/\D/g, "");
-    if (!apenasNumeros) {
-      return "0,00";
-    }
-    const numero = parseFloat(apenasNumeros) / 100;
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    })
-      .format(numero)
-      .replace("R$", "")
-      .trim();
-  };
-
   const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const valorDigitado = e.target.value;
-    const valorFormatado = formatarValor(valorDigitado);
-    setFormData({ ...formData, valor: valorFormatado });
+    const valorDigitado = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+    const valorNumerico = valorDigitado ? parseFloat(valorDigitado) / 100 : 0; // Converte para número
+    setFormData({ ...formData, valor: valorNumerico });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -51,8 +40,25 @@ export const Add: React.FC = () => {
     setFormData({ ...formData, tipo: e.target.value });
   };
 
-  const handleSave = () => {
-    setFormData({ valor: "0,00", data: "", observacoes: "", tipo: "positivo" });
+  const handleSave = async () => {
+    try {
+      const registro = {
+        valor: formData.valor, // Aqui já é um número
+        data: formData.data,
+        observacoes: formData.observacoes,
+        tipo: formData.tipo,
+        categoria: formData.categoria,
+        createdAt: new Date().toISOString(), 
+      };
+
+      await addDoc(collection(db, "registros"), registro);
+
+      alert("Registro salvo com sucesso!");
+      setFormData({ valor: 0, data: "", observacoes: "", tipo: "positivo", categoria: '' });
+    } catch (error) {
+      console.error("Erro ao salvar registro: ", error);
+      alert("Ocorreu um erro ao salvar o registro.");
+    }
   };
 
   return (
@@ -67,13 +73,25 @@ export const Add: React.FC = () => {
           <div className="form-group">
             <label htmlFor="valor" className="text-light">Valor</label>
             <input
-              type="text"
+              type="number" 
               id="valor"
               name="valor"
-              value={formData.valor}
+              value={formData.valor.toFixed(2)}
               onChange={handleValorChange}
               className="form-control"
               placeholder="Digite o valor"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="categoria" className="text-light">Categoria</label>
+            <input
+              type="text"
+              id="categoria"
+              name="categoria"
+              value={formData.categoria.toUpperCase()}
+              onChange={handleInputChange}
+              className="form-control"
+              placeholder="Digite a categoria do registro"
             />
           </div>
           <div className="form-group">

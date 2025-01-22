@@ -1,31 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "react-calendar/dist/Calendar.css";
+import '../ListPositive.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLeftLong, faRightLong } from "@fortawesome/free-solid-svg-icons";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../../../firebase/firebaseConfig"; // Certifique-se de que o caminho esteja correto
 
 export const Main = () => {
-  const entradas = [
-    { valor: 500, data: "12/01/2025", icon: "📈", atividade: "salario" },
-    { valor: 200, data: "11/01/2025", icon: "📈", atividade: "vt" },
-    { valor: 300, data: "10/01/2025", icon: "📈", atividade: "vr" },
-    { valor: 300, data: "10/01/2025", icon: "📈", atividade: "vr" },
-    { valor: 300, data: "10/01/2025", icon: "📈", atividade: "vr" },
-    { valor: 300, data: "10/01/2025", icon: "📈", atividade: "vr" },
-    { valor: 300, data: "10/01/2025", icon: "📈", atividade: "vr" },
-    { valor: 300, data: "10/01/2025", icon: "📈", atividade: "vr" },
-    { valor: 300, data: "10/01/2025", icon: "📈", atividade: "vr" },
-    { valor: 400, data: "09/01/2025", icon: "📉", atividade: "salario" },
-    { valor: 600, data: "08/01/2025", icon: "📈", atividade: "vt" },
-  ];
-
+  const [saidas, setSaidas] = useState<any[]>([]); // Tipo qualquer para dados
   const itemsPerPage = 8;
   const [currentPage, setCurrentPage] = useState(0);
 
-  const paginatedEntradas = entradas.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
+  // Buscar dados negativos do Firebase
+  const fetchPositivoData = async () => {
+    try {
+      const q = query(collection(db, "registros"), where("tipo", "==", "positivo"));
+      const querySnapshot = await getDocs(q);
+      const registros: any[] = [];
+      querySnapshot.forEach((doc) => {
+        registros.push(doc.data());
+      });
+      setSaidas(registros); // Atualiza o estado com os dados encontrados
+    } catch (error) {
+      console.error("Erro ao buscar dados positivos:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPositivoData(); // Carregar os dados quando o componente for montado
+  }, []);
+
+  const paginatedSaidas = saidas.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
   const handleNextPage = () => {
-    if ((currentPage + 1) * itemsPerPage < entradas.length) {
+    if ((currentPage + 1) * itemsPerPage < saidas.length) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -41,39 +49,26 @@ export const Main = () => {
       <div className="list-box mt-5">
         <div className="content-list">
           <div className="header-list">
-            <h4 className="text-start">Lista de Entrada</h4>
+            <h4 className="text-start">Lista de Receitas</h4>
             <button className="btn btn-warning">Filtros</button>
           </div>
           <div className="box-list">
-            <table
-              style={{
-                width: "100%",
-                color: "#fff",
-                borderCollapse: "collapse",
-              }}
-            >
+            <table className="custom-table">
               <thead>
                 <tr>
-                  <th style={{ padding: "10px", textAlign: "left" }}>Ícone</th>
-                  <th style={{ padding: "10px", textAlign: "left" }}>Valor</th>
-                  <th style={{ padding: "10px", textAlign: "left" }}>Data</th>
-                  <th style={{ padding: "10px", textAlign: "left" }}>
-                    Atividade
-                  </th>
+                  <th className="table-header">Ícone</th>
+                  <th className="table-header">Valor</th>
+                  <th className="table-header">Data</th>
+                  <th className="table-header">Atividade</th>
                 </tr>
               </thead>
               <tbody>
-                {paginatedEntradas.map((entrada, index) => (
-                  <tr
-                    key={index}
-                    style={{
-                      borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
-                    }}
-                  >
-                    <td style={{ padding: "10px" }}>{entrada.icon}</td>
-                    <td style={{ padding: "10px" }}>{entrada.valor}</td>
-                    <td style={{ padding: "10px" }}>{entrada.data}</td>
-                    <td style={{ padding: "10px" }}>{entrada.atividade}</td>
+                {paginatedSaidas.map((saida, index) => (
+                  <tr key={index} className="table-row">
+                    <td className="table-cell">📉</td>
+                    <td className="table-cell">{saida.valor}</td>
+                    <td className="table-cell">{new Date(saida.data).toLocaleDateString('pt-BR')}</td>
+                    <td className="table-cell">{saida.categoria}</td>
                   </tr>
                 ))}
               </tbody>
@@ -82,48 +77,20 @@ export const Main = () => {
         </div>
       </div>
 
-      <div
-        style={{
-          position: "fixed",
-          bottom: "10px",
-          left: "26%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          gap: "15px",
-        }}
-      >
+      <div className="pagination">
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 0}
-          style={{
-            backgroundColor: "#1d6f62",
-            color: "#fff",
-            border: "none",
-            padding: "10px 15px",
-            cursor: currentPage === 0 ? "not-allowed" : "pointer",
-            borderRadius: "5px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
-          }}
+          className={`pagination-btn ${currentPage === 0 ? "disabled" : ""}`}
         >
-          {"< Anterior"}
+          <FontAwesomeIcon icon={faLeftLong} />
         </button>
         <button
           onClick={handleNextPage}
-          disabled={(currentPage + 1) * itemsPerPage >= entradas.length}
-          style={{
-            backgroundColor: "#1d6f62",
-            color: "#fff",
-            border: "none",
-            padding: "10px 15px",
-            cursor:
-              (currentPage + 1) * itemsPerPage >= entradas.length
-                ? "not-allowed"
-                : "pointer",
-            borderRadius: "5px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
-          }}
+          disabled={(currentPage + 1) * itemsPerPage >= saidas.length}
+          className={`pagination-btn ${ (currentPage + 1) * itemsPerPage >= saidas.length ? "disabled" : "" }`}
         >
-          {"Próximo >"}
+          <FontAwesomeIcon icon={faRightLong} />
         </button>
       </div>
     </div>

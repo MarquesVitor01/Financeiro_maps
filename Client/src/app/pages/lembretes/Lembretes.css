@@ -1,0 +1,214 @@
+.lembretes-container {
+  margin-top: 40px;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.title-calendar {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #3b5998;
+  margin-bottom: 20px;
+}
+
+.calendar-box {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%; 
+  
+}
+
+.reminder-section {
+  background: #f9fbfd;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  height: 50%;
+  
+}
+
+h4 {
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  color: #3b5998;
+  text-align: center;
+}
+
+.reminder-list {
+  margin-top: 15px;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.reminder-item {
+  background: #e9f5ff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  color: #2c3e50;
+}
+
+.reminder-item:last-child {
+  margin-bottom: 0;
+}
+
+.add-reminder {
+  margin-top: 20px;
+}
+
+.reminder-input {
+  width: calc(100% - 24px);
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.reminder-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reminder-buttons button {
+  flex: 1;
+  padding: 12px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reminder-buttons button:first-child {
+  background: #3b5998;
+  color: #fff;
+}
+
+.reminder-buttons button:first-child:hover {
+  background: #2a437a;
+}
+
+.reminder-buttons button:last-child {
+  background: #f44336;
+  color: #fff;
+}
+
+.reminder-buttons button:last-child:hover {
+  background: #d32f2f;
+}
+
+.reminder-marker {
+  background-color: #fbbc05;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: inline-block;
+  margin: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3b5998;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2a437a;
+}
+.react-calendar {
+  width: 100%;
+  max-width: 100%; 
+  font-family: "Poppins", sans-serif;
+  font-size: 1.2rem; 
+  padding: 20px; 
+}
+
+.react-calendar__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem; 
+}
+
+.react-calendar__month-view__days__day--weekend {
+  color: #d32f2f;
+}
+
+.react-calendar__tile:hover {
+  background: #f0f4ff;
+  border-radius: 8px;
+}
+
+.react-calendar__tile--active {
+  background: #3b5998;
+  color: white;
+  border-radius: 8px;
+}
+
+.react-calendar__navigation button {
+  color: #3b5998;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.react-calendar__navigation button:hover {
+  background: #e1e4e8;
+  border-radius: 8px;
+}
+
+.highlighted-day {
+  background-color: #f5a623 !important;
+  color: #fff !important;
+  border-radius: 8px; 
+  font-weight: bold;
+}
+
+.highlighted-day:hover {
+  background-color: #ffa94d !important;
+  border-radius: 8px; 
+}
+
+.tile-height-150px {
+  height: 80px !important;
+}
+
+.tile-height-70px {
+  height: 70px !important;
+}
+
+.tile-height-50px {
+  height: 50px !important;
+}
+
+.delete-icon{
+  color: #d32f2f;
+  cursor: pointer;
+}
+
+.delete-icon:hover{
+  color: #942121;
+}

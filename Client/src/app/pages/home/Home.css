@@ -56,23 +56,16 @@
   
   .main {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 70px 30px 10px 37px ;
+    padding: 100px 30px 10px 37px ;
     margin-left: 230px;
     width: calc(100% - 230px);
-    height: max-content;
-    box-sizing: border-box;
     flex-direction: column;
   }
   
   .main-boxes {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    display: flex;
+    justify-content: space-around;
     width: 100%;
-    height: 220px;
-    box-sizing: border-box;
   }
   
   .content-box {
@@ -82,11 +75,11 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 80%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     transition: background 0.3s ease;
+    margin-bottom: 50px;
   }
-
+  
   .content-box h4 {
     font-size: 18px;
     color: #fff;
@@ -103,14 +96,9 @@
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
-  .mini-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-  
+
   .mini-table td {
-    padding: 5px;
+    padding-block: 5px;
     text-align: center;
     font-size: 14px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -122,7 +110,6 @@
   
   .content-box table {
     width: 100%;
-    margin-top: 10px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 10px;
@@ -157,7 +144,7 @@
     padding: 8px;
     background-color: #fff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    height: 350px;
+    min-width: 300px;
   }
   
   .chart-box h4 {
@@ -167,25 +154,18 @@
   }
   
   .charts-container{
+    width: 100%;
     display: flex;
     justify-content: center;
-    gap: 10px;
-
+    align-items: center;
   }
   .calendar-box {
-    flex: 1;
-    width: 907px;
     padding: 15px;
     background: #2c9c8d;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     display: flex;
-    justify-content: center;
-    gap: 5px;
-  }
-  
-  .reminders {
-    margin-top: 10px;
+    gap: 10px;
   }
   
   .reminders ul {
@@ -193,7 +173,6 @@
     padding: 0;
   }
   .reminders h5 {
-
     color: #fff;
   }
   .reminders li {
@@ -202,24 +181,11 @@
     color: #fff;
   }
   
-  .calendar-container {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-  }
-  
   .reminders {
     flex-grow: 1;
     padding: 10px;
   }
-  
-  .reminder-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
+
   .react-calendar{
     border-radius: 5px;
     background-color: #fff!important;
@@ -259,16 +225,13 @@
     border-radius: 8px!important;
     width: 300px!important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  }
-  
-  .modal-content h3 {
-    margin-bottom: 10px;
+    gap: 10px;
+    display: flex;
   }
   
   .modal-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
   }
   
   .modal-buttons button {
@@ -279,14 +242,42 @@
     border-radius: 5px;
     cursor: pointer;
   }
+  .modal-input{
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+  }
   
   .modal-buttons button:hover {
     background-color: #1a7c71;
   }
   
-  /* Estilo para os dias com lembrete */
 .react-calendar__tile.highlight-reminder {
   
   background-color: red !important;
   color: white !important;
+}
+
+.reminder-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.delete-button {
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.delete-button:hover {
+  background-color: #e33c3f;
 }
